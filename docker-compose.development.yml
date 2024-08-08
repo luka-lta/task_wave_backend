@@ -29,6 +29,7 @@ services:
   mysql:
     image: mysql
     container_name: 'mysql-taskwave'
+    hostname: mysql-taskwave
     environment:
       MYSQL_DATABASE: 'task_wave_api'
       MYSQL_USER: 'testing'
@@ -55,6 +56,8 @@ services:
       PMA_ARBITRAY: 1
     ports:
       - '8081:80'
+    networks:
+      - taskWave-shared
 
 volumes:
   taskWaveData:
