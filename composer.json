@@ -1,0 +1,29 @@
+{
+    "name": "luka-lta/task_wave_backend",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TaskWaveBackend\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "luka-lta",
+            "email": "luka.lta21@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php-di/php-di": "^7.0",
+        "php-di/slim-bridge": "^3.4",
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.7",
+        "nyholm/psr7": "^1.8",
+        "nyholm/psr7-server": "^1.1"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "2.*",
+        "squizlabs/php_codesniffer": "3.*"
+    }
+}
