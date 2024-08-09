@@ -18,18 +18,16 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker Image
-        run: docker compose -f docker-compose.development.yml build
+        run: docker compose -f docker-compose.development.yml build php-fpm
 
-      - name: Save Docker Image to cache
+      - name: Save Docker Image to file
         run: docker save -o taskwave.tar php-fpm-taskwave
 
-      - name: Upload image to GitHub actions cache
-        uses: actions/cache@v3
+      - name: Upload Docker Image to GitHub Actions cache
+        uses: actions/upload-artifact@v3
         with:
+          name: taskwave-image
           path: taskwave.tar
-          key: ${{ runner.os }}-taskwave-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-taskwave-
 
   codestyle:
     name: Code Style
@@ -40,16 +38,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Restore image from GitHub actions cache
-        uses: actions/cache@v3
+      - name: Download Docker Image from GitHub Actions cache
+        uses: actions/download-artifact@v3
         with:
-          path: taskwave.tar
-          key: ${{ runner.os }}-taskwave-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-taskwave-
+          name: taskwave-image
+          path: ./taskwave.tar
 
       - name: Load Docker Image
-        run: docker load -i taskwave.tar
+        run: docker load -i ./taskwave.tar
 
       - name: Start Docker Compose environment
         run: docker compose -f docker-compose.development.yml up -d
