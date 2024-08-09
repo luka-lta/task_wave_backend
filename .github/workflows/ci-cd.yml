@@ -26,7 +26,7 @@ jobs:
       - name: Upload image to GitHub actions cache
         uses: actions/cache@v3
         with:
-          path: myapp.tar
+          path: taskwave.tar
           key: ${{ runner.os }}-taskwave-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-taskwave-
@@ -43,7 +43,7 @@ jobs:
       - name: Restore image from GitHub actions cache
         uses: actions/cache@v3
         with:
-          path: myapp.tar
+          path: taskwave.tar
           key: ${{ runner.os }}-taskwave-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-taskwave-
