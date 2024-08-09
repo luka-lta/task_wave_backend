@@ -21,7 +21,7 @@ jobs:
         run: docker compose -f docker-compose.development.yml build php-fpm
 
       - name: Save Docker Image to file
-        run: docker save -o taskwave.tar php-fpm-taskwave
+        run: docker save -o taskwave.tar php-fpm
 
       - name: Upload Docker Image to GitHub Actions cache
         uses: actions/upload-artifact@v3
