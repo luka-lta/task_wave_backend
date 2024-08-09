@@ -17,8 +17,19 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and Start Docker Compose environment
-        run: docker compose -f docker-compose.development.yml up --build -d
+      - name: Build Docker Image
+        run: docker compose -f docker-compose.development.yml build
+
+      - name: Save Docker Image to cache
+        run: docker save -o taskwave.tar php-fpm-taskwave
+
+      - name: Upload image to GitHub actions cache
+        uses: actions/cache@v3
+        with:
+          path: myapp.tar
+          key: ${{ runner.os }}-taskwave-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-taskwave-
 
   codestyle:
     name: Code Style
@@ -28,6 +39,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Restore image from GitHub actions cache
+        uses: actions/cache@v3
+        with:
+          path: myapp.tar
+          key: ${{ runner.os }}-taskwave-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-taskwave-
+
+      - name: Load Docker Image
+        run: docker load -i taskwave.tar
+
+      - name: Start Docker Compose environment
+        run: docker compose -f docker-compose.development.yml up -d
 
       - name: Run PHPCS (PHP CodeSniffer)
         run: docker compose -f docker-compose.development.yml exec -T php-fpm-taskwave phpcs --standard=PSR12 src/
