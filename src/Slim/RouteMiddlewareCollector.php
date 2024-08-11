@@ -8,6 +8,8 @@ use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
+use TaskWaveBackend\Api\Register\Action\RegisterAction;
 use TaskWaveBackend\Slim\Middleware\CORSMiddleware;
 use Throwable;
 
@@ -77,5 +79,8 @@ class RouteMiddlewareCollector
 
     public function registerApiRoutes(App $app): void
     {
+        $app->group('/api/v1', function (RouteCollectorProxy $app) {
+            $app->post('/register', RegisterAction::class);
+        });
     }
 }

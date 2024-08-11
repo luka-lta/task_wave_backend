@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace TaskWaveBackend\Value\User;
 
+use Fig\Http\Message\StatusCodeInterface;
 use InvalidArgumentException;
+use TaskWaveBackend\Exception\TaskWaveValidationFailureException;
 
 class Email
 {
@@ -12,7 +14,10 @@ class Email
         private readonly string $email
     ) {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('Invalid email address');
+            throw new TaskWaveValidationFailureException(
+                'Invalid email address',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
         }
     }
 

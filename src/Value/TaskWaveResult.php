@@ -16,7 +16,7 @@ class TaskWaveResult
         private readonly int             $status,
     ) {
         if ($status < 100 || $status > 599) {
-            throw new InvalidArgumentException('Invalid status code');
+            throw new InvalidArgumentException('Invalid HTTP status code');
         }
     }
 
