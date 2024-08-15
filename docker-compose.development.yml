@@ -9,6 +9,8 @@ services:
       - ./docker/nginx/nginx-development.conf:/etc/nginx/conf.d/default.conf
     links:
       - php-fpm
+    networks:
+      - taskWave-shared
 
   php-fpm:
     build:
@@ -23,8 +25,11 @@ services:
       MYSQL_HOST: 'mysql-taskwave'
       MYSQL_USER: 'testing'
       MYSQL_PASSWORD: '1234'
+      JWT_SECRET: 'd17c14f3ff470cebe5f85df1efc966b0fcdc2096'
     volumes:
       - ./:/app:rw
+    networks:
+      - taskWave-shared
 
   mysql:
     image: mysql

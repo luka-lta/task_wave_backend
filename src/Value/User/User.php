@@ -7,7 +7,7 @@ namespace TaskWaveBackend\Value\User;
 class User
 {
     private function __construct(
-        private readonly int             $userId,
+        private readonly ?int             $userId,
         private readonly Username        $username,
         private readonly Email           $email,
         private readonly Password        $password,
@@ -18,11 +18,11 @@ class User
 
     public static function fromDatabase(array $payload): self
     {
-        $profilePicture = $payload['profile_picture'] === null
+        $profilePicture = $payload['profile_picture_path'] === null
             ? null
-            : ProfilePicture::fromString($payload['profile_picture']);
+            : ProfilePicture::fromString($payload['profile_picture_path']);
 
-        $gender = $payload['gender'] === null ?: Gender::from($payload['gender']);
+        $gender = $payload['gender'] === null ? null : Gender::from($payload['gender']);
 
         return new self(
             $payload['user_id'],
@@ -35,18 +35,17 @@ class User
     }
 
     public static function fromRegistration(
-        int     $userId,
         string  $username,
         string  $email,
         string  $password,
-        ?string $gender,
-        ?string $profilePicture
+        string $gender = null,
+        string $profilePicture = null
     ): self {
         $parsedGender = $gender === null ? null : Gender::from($gender);
         $parsedProfilePicture = $profilePicture === null ? null : ProfilePicture::fromString($profilePicture);
 
         return new self(
-            $userId,
+            null,
             Username::from($username),
             Email::from($email),
             Password::fromPlain($password),
@@ -55,7 +54,7 @@ class User
         );
     }
 
-    public function getUserId(): int
+    public function getUserId(): ?int
     {
         return $this->userId;
     }

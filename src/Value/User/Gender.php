@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TaskWaveBackend\Value\User;
 
+use Fig\Http\Message\StatusCodeInterface;
 use TaskWaveBackend\Exception\TaskWaveValidationFailureException;
 
 class Gender
@@ -22,7 +23,10 @@ class Gender
         private readonly string $gender
     ) {
         if (!in_array($gender, self::ALLOWED_GENDERS)) {
-            throw new TaskWaveValidationFailureException('Invalid gender');
+            throw new TaskWaveValidationFailureException(
+                'Invalid gender',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
         }
     }
 

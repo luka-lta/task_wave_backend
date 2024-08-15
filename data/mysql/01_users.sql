@@ -3,6 +3,7 @@ CREATE TABLE `users`
     `user_id`              int          NOT NULL,
     `email`                varchar(254) NOT NULL,
     `username`             varchar(32)  NOT NULL,
+    `password`             varchar(255)  NOT NULL,
     `gender`               enum ('Male','Female','Other') DEFAULT NULL,
     `profile_picture_path` int                            DEFAULT NULL,
     `last_logged_in`       datetime                       DEFAULT NULL,
