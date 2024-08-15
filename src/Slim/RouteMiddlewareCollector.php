@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
 use TaskWaveBackend\Slim\Middleware\CORSMiddleware;
 use Throwable;
@@ -81,6 +82,7 @@ class RouteMiddlewareCollector
     {
         $app->group('/api/v1', function (RouteCollectorProxy $app) {
             $app->post('/register', RegisterAction::class);
+            $app->post('/login', LoginAction::class);
         });
     }
 }

@@ -16,10 +16,11 @@ class RegisterService
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly RegisterRepository $registerRepository,
+        private readonly JwtService $jwtService,
     ) {
     }
 
-    public function register(string $email, string $username, string $password): void
+    public function register(string $email, string $username, string $password): string
     {
         if ($this->userRepository->findByEmail(Email::from($email)) !== null) {
             throw new TaskWaveDatabaseException(
@@ -30,5 +31,7 @@ class RegisterService
 
         $user = User::fromRegistration($username, $email, $password);
         $this->registerRepository->registerUser($user);
+
+        return $this->jwtService->generateJwt($user);
     }
 }

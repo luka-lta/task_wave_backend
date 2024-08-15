@@ -8,6 +8,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TaskWaveBackend\Api\Validator\RequestValidator;
+use TaskWaveBackend\Service\JwtService;
 use TaskWaveBackend\Service\RegisterService;
 use TaskWaveBackend\Slim\TaskWaveAction;
 use TaskWaveBackend\Value\ErrorResult;
@@ -32,14 +33,14 @@ class RegisterAction extends TaskWaveAction
 //            'password' => $body['password'],
 //        ]);
 
-        $this->registerService->register(
+        $token = $this->registerService->register(
             $body['email'],
             $body['username'],
             $body['password'],
         );
 
         return TaskWaveResult::from(
-            JsonResult::from('User registered!'),
+            JsonResult::from('User registered!', ['token' => $token]),
             StatusCodeInterface::STATUS_CREATED
         )->getResponse($response);
     }

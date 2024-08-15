@@ -44,4 +44,24 @@ class UserRepository
             );
         }
     }
+
+    public function updateLastLoggedIn(User $user): void
+    {
+        $query = <<<SQL
+            UPDATE users SET last_logged_in = NOW() WHERE user_id = :userId
+        SQL;
+
+        try {
+            $statement = $this->pdo->prepare($query);
+            $statement->execute([
+                'userId' => $user->getUserId(),
+            ]);
+        } catch (TaskWaveDatabaseException $exception) {
+            throw new TaskWaveDatabaseException(
+                $exception->getMessage(),
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+    }
 }
