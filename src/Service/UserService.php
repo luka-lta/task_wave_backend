@@ -34,7 +34,7 @@ class UserService
             );
         }
 
-        $user = User::fromRegistration($username, $email, $password, $gender, $profilePicture);
+        $user = User::fromRaw(null, $username, $email, $password, $gender, $profilePicture);
         $this->userRepository->save($user);
 
         return $this->jwtService->generateJwt($user);
@@ -63,6 +63,19 @@ class UserService
 
     public function updateUser(User $user): void
     {
+        $this->userRepository->update($user);
+    }
+
+    public function updateUserFromRaw(
+        int $userId,
+        string $username,
+        string $email,
+        string $password,
+        ?string $gender = null,
+        ?string $profilePicture = null
+    ): void {
+        $user = User::fromRaw($userId, $username, $email, $password, $gender, $profilePicture);
+
         $this->userRepository->update($user);
     }
 
