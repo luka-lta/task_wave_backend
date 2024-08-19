@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace TaskWaveBackend\Service;
 
 use Fig\Http\Message\StatusCodeInterface;
+use TaskWaveBackend\Exception\TaskWaveDatabaseException;
 use TaskWaveBackend\Exception\TaskWaveInvalidCredentialsException;
 use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
 use TaskWaveBackend\Repository\UserRepository;
 use TaskWaveBackend\Value\User\Email;
+use TaskWaveBackend\Value\User\User;
 
 class UserService
 {
@@ -18,9 +20,29 @@ class UserService
     ) {
     }
 
-    public function loginUser(Email $email, string $inputPassword): string
+    public function registerUser(
+        string $username,
+        string $email,
+        string $password,
+        ?string $gender = null,
+        ?string $profilePicture = null
+    ): string {
+        if ($this->userRepository->findByEmail(Email::from($email)) !== null) {
+            throw new TaskWaveDatabaseException(
+                'Email already exists',
+                StatusCodeInterface::STATUS_CONFLICT
+            );
+        }
+
+        $user = User::fromRegistration($username, $email, $password, $gender, $profilePicture);
+        $this->userRepository->save($user);
+
+        return $this->jwtService->generateJwt($user);
+    }
+
+    public function loginUser(string $email, string $inputPassword): string
     {
-        $user = $this->userRepository->findByEmail($email);
+        $user = $this->userRepository->findByEmail(Email::from($email));
 
         if ($user === null) {
             throw new TaskWaveUserNotFoundException(
@@ -36,7 +58,26 @@ class UserService
             );
         }
 
-        $this->userRepository->updateLastLoggedIn($user);
         return $this->jwtService->generateJwt($user);
+    }
+
+    public function updateUser(User $user): void
+    {
+        $this->userRepository->update($user);
+    }
+
+    public function deleteUser(int $userId): void
+    {
+        $this->userRepository->delete($userId);
+    }
+
+    public function findUserById(int $userId): ?User
+    {
+        return $this->userRepository->findById($userId);
+    }
+
+    public function findUserByEmail(string $email): ?User
+    {
+        return $this->userRepository->findByEmail(Email::from($email));
     }
 }

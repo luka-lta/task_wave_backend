@@ -8,17 +8,15 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TaskWaveBackend\Api\Validator\RequestValidator;
-use TaskWaveBackend\Service\JwtService;
-use TaskWaveBackend\Service\RegisterService;
+use TaskWaveBackend\Service\UserService;
 use TaskWaveBackend\Slim\TaskWaveAction;
-use TaskWaveBackend\Value\ErrorResult;
 use TaskWaveBackend\Value\JsonResult;
 use TaskWaveBackend\Value\TaskWaveResult;
 
 class RegisterAction extends TaskWaveAction
 {
     public function __construct(
-        private readonly RegisterService $registerService,
+        private readonly UserService      $userService,
         private readonly RequestValidator $validator,
     ) {
     }
@@ -27,16 +25,27 @@ class RegisterAction extends TaskWaveAction
     {
         $body = $request->getParsedBody();
 
-//        $validatorError = $this->validator->validate([
-//            'email' => $body['email'],
-//            'username' => $body['username'],
-//            'password' => $body['password'],
-//        ]);
+        $email =  $body['email'] ?? null;
+        $username = $body['username'] ?? null;
+        $password = $body['password'] ?? null;
 
-        $token = $this->registerService->register(
-            $body['email'],
-            $body['username'],
-            $body['password'],
+        $validatorError = $this->validator->validate([
+            'email' => $email,
+            'username' => $username,
+            'password' => $password,
+        ]);
+
+        if ($validatorError) {
+            return TaskWaveResult::from(
+                JsonResult::from('Invalid input', ['error' => $validatorError]),
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            )->getResponse($response);
+        }
+
+        $token = $this->userService->registerUser(
+            $username,
+            $email,
+            $password,
         );
 
         return TaskWaveResult::from(
