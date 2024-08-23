@@ -34,7 +34,8 @@ class User
         );
     }
 
-    public static function fromRegistration(
+    public static function fromRaw(
+        ?int $userId,
         string  $username,
         string  $email,
         string  $password,
@@ -45,7 +46,7 @@ class User
         $parsedProfilePicture = $profilePicture === null ? null : ProfilePicture::fromString($profilePicture);
 
         return new self(
-            null,
+            $userId,
             Username::from($username),
             Email::from($email),
             Password::fromPlain($password),

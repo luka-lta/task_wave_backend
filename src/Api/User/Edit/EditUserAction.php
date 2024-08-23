@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TaskWaveBackend\Api\Register\Action;
+namespace TaskWaveBackend\Api\User\Edit;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -13,11 +13,11 @@ use TaskWaveBackend\Slim\TaskWaveAction;
 use TaskWaveBackend\Value\JsonResult;
 use TaskWaveBackend\Value\TaskWaveResult;
 
-class RegisterAction extends TaskWaveAction
+class EditUserAction extends TaskWaveAction
 {
     public function __construct(
-        private readonly UserService      $userService,
-        private readonly RequestValidator $validator,
+        private readonly UserService $userService,
+        private readonly RequestValidator $requestValidator,
     ) {
     }
 
@@ -25,11 +25,15 @@ class RegisterAction extends TaskWaveAction
     {
         $body = $request->getParsedBody();
 
+        $userId = (int)$request->getAttribute('userId') ?? null;
         $email =  $body['email'] ?? null;
         $username = $body['username'] ?? null;
         $password = $body['password'] ?? null;
+        $gender = $body['gender'] ?? null;
+        $profilePicture = $body['profilePicture'] ?? null;
 
-        $validatorError = $this->validator->validate([
+        $validatorError = $this->requestValidator->validate([
+            'userId' => $userId,
             'email' => $email,
             'username' => $username,
             'password' => $password,
@@ -42,14 +46,17 @@ class RegisterAction extends TaskWaveAction
             )->getResponse($response);
         }
 
-        $token = $this->userService->registerUser(
+        $this->userService->updateUserFromRaw(
+            $userId,
             $username,
             $email,
             $password,
+            $gender,
+            $profilePicture
         );
 
         return TaskWaveResult::from(
-            JsonResult::from('User registered!', ['token' => $token]),
+            JsonResult::from('User updated!'),
             StatusCodeInterface::STATUS_CREATED
         )->getResponse($response);
     }
