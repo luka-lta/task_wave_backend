@@ -109,7 +109,7 @@ class UserRepository
     public function delete(int $userId): void
     {
         try {
-            $stmt = $this->pdo->prepare('DELETE FROM users WHERE user_id = :user_id');
+            $stmt = $this->pdo->prepare('UPDATE users SET disabled = 1 WHERE user_id = :user_id');
             $stmt->execute(['user_id' => $userId]);
         } catch (PDOException $exception) {
             throw new TaskWaveDatabaseException(
