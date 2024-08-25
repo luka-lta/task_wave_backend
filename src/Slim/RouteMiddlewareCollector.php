@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use TaskWaveBackend\Api\Category\CreateCategoryAction;
 use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
@@ -16,6 +17,9 @@ use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Slim\Middleware\CORSMiddleware;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class RouteMiddlewareCollector
 {
     public function register(App $app): void
@@ -86,9 +90,13 @@ class RouteMiddlewareCollector
             $app->post('/register', RegisterAction::class);
             $app->post('/login', LoginAction::class);
 
-            $app->group('/user', function (RouteCollectorProxy $app) {
-                $app->post('/edit/{userId:[0-9]+}', EditUserAction::class);
-                $app->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class);
+            $app->group('/user', function (RouteCollectorProxy $user) {
+                $user->post('/edit/{userId:[0-9]+}', EditUserAction::class);
+                $user->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class);
+            });
+
+            $app->group('/category', function (RouteCollectorProxy $category) {
+                $category->post('/create/{ownerId:[0-9]+}', CreateCategoryAction::class);
             });
         });
     }

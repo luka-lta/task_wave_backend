@@ -7,11 +7,11 @@ namespace TaskWaveBackend\Value\Categories;
 class Category
 {
     private function __construct(
-        private readonly int $categoryId,
+        private readonly ?int $categoryId,
         private readonly int $ownerId,
         private readonly string $name,
         private readonly string $description,
-        private readonly string $color,
+        private readonly ?string $color,
     ) {
     }
 
@@ -27,11 +27,11 @@ class Category
     }
 
     public static function from(
-        int $categoryId,
+        ?int $categoryId,
         int $ownerId,
         string $name,
         string $description,
-        string $color,
+        ?string $color = null,
     ): self {
         return new self(
             $categoryId,
@@ -42,7 +42,7 @@ class Category
         );
     }
 
-    public function getCategoryId(): int
+    public function getCategoryId(): ?int
     {
         return $this->categoryId;
     }
@@ -57,7 +57,7 @@ class Category
         return $this->name;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
