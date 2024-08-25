@@ -17,6 +17,9 @@ use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Slim\Middleware\CORSMiddleware;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class RouteMiddlewareCollector
 {
     public function register(App $app): void

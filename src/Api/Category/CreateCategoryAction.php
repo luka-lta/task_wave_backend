@@ -23,7 +23,7 @@ class CreateCategoryAction extends TaskWaveAction
 
     protected function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $ownerId = $request->getAttribute('ownerId') ?? null;
+        $ownerId = (int)$request->getAttribute('ownerId') ?? null;
         $data = $request->getParsedBody();
 
         $name = $data['name'] ?? null;

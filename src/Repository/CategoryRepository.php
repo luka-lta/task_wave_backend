@@ -32,9 +32,10 @@ class CategoryRepository
                 'owner_id' => $category->getOwnerId(),
                 'name' => $category->getName(),
                 'description' => $category->getDescription(),
-                'color' => $category->getDescription()
+                'color' => $category->getColor()
             ]);
         } catch (PDOException $exception) {
+            var_dump($exception->getMessage());
             throw new TaskWaveDatabaseException(
                 'Failed to create categorie',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
