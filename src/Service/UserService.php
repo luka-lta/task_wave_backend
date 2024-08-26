@@ -8,15 +8,18 @@ use Fig\Http\Message\StatusCodeInterface;
 use TaskWaveBackend\Exception\TaskWaveDatabaseException;
 use TaskWaveBackend\Exception\TaskWaveInvalidCredentialsException;
 use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
+use TaskWaveBackend\Exception\TaskWaveValidationFailureException;
 use TaskWaveBackend\Repository\UserRepository;
 use TaskWaveBackend\Value\User\Email;
+use TaskWaveBackend\Value\User\Password;
 use TaskWaveBackend\Value\User\User;
 
 class UserService
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly JwtService $jwtService,
+        private readonly UserRepository       $userRepository,
+        private readonly JwtService           $jwtService,
+        private readonly PasswordResetService $passwordResetService,
     ) {
     }
 
@@ -94,5 +97,22 @@ class UserService
         return $this->userRepository->findByEmail(Email::from($email));
     }
 
-    // TODO add password reset method
+    public function updatePassword(Email $email, Password $newPassword, string $resetToken): void
+    {
+        $this->passwordResetService->validateResetToken($email, $resetToken);
+
+        $user = $this->findUserByEmail($email->toString());
+        // TODO: Password is null idk
+        $oldPassword = $user->getPassword();
+
+        if ($oldPassword->toString() === $newPassword->toString()) {
+            throw new TaskWaveValidationFailureException(
+                'New password cannot be the same as the old password',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
+        }
+
+        $user->setPassword($newPassword);
+        $this->userRepository->update($user);
+    }
 }

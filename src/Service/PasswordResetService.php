@@ -16,7 +16,7 @@ class PasswordResetService
     {
     }
 
-    public function createPasswordResetToken(Email $email, string $token): void
+    public function createPasswordResetToken(Email $email): void
     {
         $token = bin2hex(random_bytes(16));
 
@@ -32,14 +32,14 @@ class PasswordResetService
     }
 
 
-    public function getPasswordReset(Email $email): ?PasswordReset
+    public function validateResetToken(Email $email, string $token): ?PasswordReset
     {
         $passwordReset  = $this->repository->getPasswordReset($email);
 
-        if ($passwordReset === null) {
+        if ($token !== $passwordReset->getToken()) {
             throw new TaskWaveInvalidTokenException(
-                'No reset token found',
-                StatusCodeInterface::STATUS_NOT_FOUND,
+                'Invalid reset token',
+                StatusCodeInterface::STATUS_UNAUTHORIZED,
             );
         }
 

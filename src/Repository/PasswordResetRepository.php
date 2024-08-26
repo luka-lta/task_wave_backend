@@ -23,12 +23,15 @@ class PasswordResetRepository
         try {
             $stmt = $this->pdo->prepare('INSERT INTO password_resets (email, token, created_at, expired_at) VALUES (:email, :token, :created_at, :expired_at)');
             $stmt->execute([
-                'email' => $email,
+                'email' => $email->toString(),
                 'token' => $token,
                 'created_at' => date('Y-m-d H:i:s'),
                 'expired_at' => date('Y-m-d H:i:s', strtotime('+1 hour')),
             ]);
         } catch (PDOException $e) {
+
+            var_dump($token);
+
             throw new TaskWaveDatabaseException(
                 'Failed to create password reset token',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
@@ -41,7 +44,7 @@ class PasswordResetRepository
     {
         try {
             $stmt = $this->pdo->prepare('SELECT * FROM password_resets WHERE email = :email');
-            $stmt->execute(['email' => $email]);
+            $stmt->execute(['email' => $email->toString()]);
             $data = $stmt->fetch();
 
             if ($data === false) {
