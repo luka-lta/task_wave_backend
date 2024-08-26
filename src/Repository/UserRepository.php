@@ -78,6 +78,7 @@ class UserRepository
 
     public function update(User $user): void
     {
+        $this->pdo->beginTransaction();
         try {
             $stmt = $this->pdo->prepare('
             UPDATE users SET 
@@ -97,7 +98,9 @@ class UserRepository
                 'gender' => $user->getGender()?->toString(),
                 'profile_picture_path' => $user->getProfilePicture()?->toString(),
             ]);
+            $this->pdo->commit();
         } catch (PDOException $exception) {
+            $this->pdo->rollBack();
             throw new TaskWaveDatabaseException(
                 'Failed to update user',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,

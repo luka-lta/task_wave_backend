@@ -97,22 +97,26 @@ class UserService
         return $this->userRepository->findByEmail(Email::from($email));
     }
 
-    public function updatePassword(Email $email, Password $newPassword, string $resetToken): void
+    public function updatePassword(Email $email, string $newPassword, string $resetToken): void
     {
         $this->passwordResetService->validateResetToken($email, $resetToken);
 
         $user = $this->findUserByEmail($email->toString());
-        // TODO: Password is null idk
+
         $oldPassword = $user->getPassword();
 
-        if ($oldPassword->toString() === $newPassword->toString()) {
+        if ($oldPassword->verify($newPassword)) {
             throw new TaskWaveValidationFailureException(
                 'New password cannot be the same as the old password',
                 StatusCodeInterface::STATUS_BAD_REQUEST
             );
         }
 
+        $newPassword = Password::fromPlain($newPassword);
+
         $user->setPassword($newPassword);
         $this->userRepository->update($user);
+
+        $this->passwordResetService->deletePasswordReset($email);
     }
 }

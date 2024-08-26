@@ -39,7 +39,6 @@ class UpdatePasswordAction extends TaskWaveAction
         ]);
 
         $email = Email::from($email);
-        $password = Password::fromPlain($password);
 
         if ($validationResult) {
             return TaskWaveResult::from(

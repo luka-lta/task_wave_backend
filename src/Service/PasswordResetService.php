@@ -12,9 +12,9 @@ use TaskWaveBackend\Value\User\Email;
 
 class PasswordResetService
 {
-    public function __construct(private readonly PasswordResetRepository $repository)
-    {
-    }
+    public function __construct(
+        private readonly PasswordResetRepository $repository,
+    ) {}
 
     public function createPasswordResetToken(Email $email): void
     {
@@ -36,6 +36,13 @@ class PasswordResetService
     {
         $passwordReset  = $this->repository->getPasswordReset($email);
 
+        if ($passwordReset === null) {
+            throw new TaskWaveInvalidTokenException(
+                'Invalid reset token',
+                StatusCodeInterface::STATUS_UNAUTHORIZED,
+            );
+        }
+
         if ($token !== $passwordReset->getToken()) {
             throw new TaskWaveInvalidTokenException(
                 'Invalid reset token',
@@ -51,5 +58,10 @@ class PasswordResetService
         }
 
         return $passwordReset;
+    }
+
+    public function deletePasswordReset(Email $email): void
+    {
+        $this->repository->deletePasswordReset($email);
     }
 }
