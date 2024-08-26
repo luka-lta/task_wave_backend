@@ -93,4 +93,6 @@ class UserService
     {
         return $this->userRepository->findByEmail(Email::from($email));
     }
+
+    // TODO add password reset method
 }
