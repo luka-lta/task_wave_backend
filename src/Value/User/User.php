@@ -10,7 +10,7 @@ class User
         private readonly ?int             $userId,
         private readonly Username        $username,
         private readonly Email           $email,
-        private readonly Password        $password,
+        private Password        $password,
         private readonly ?Gender         $gender,
         private readonly ?ProfilePicture $profilePicture
     ) {
@@ -83,5 +83,10 @@ class User
     public function getProfilePicture(): ?ProfilePicture
     {
         return $this->profilePicture;
+    }
+
+    public function setPassword(Password $password): void
+    {
+        $this->password = $password;
     }
 }
