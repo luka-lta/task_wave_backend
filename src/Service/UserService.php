@@ -64,12 +64,7 @@ class UserService
         return AuthToken::generateToken($user);
     }
 
-    public function updateUser(User $user): void
-    {
-        $this->userRepository->update($user);
-    }
-
-    public function updateUserFromRaw(
+    public function updateUser(
         int $userId,
         string $username,
         string $email,
@@ -84,17 +79,42 @@ class UserService
 
     public function deleteUser(int $userId): void
     {
+        if ($this->findUserById($userId) === null) {
+            throw new TaskWaveUserNotFoundException(
+                'User not exists with this ID',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
+        }
+
         $this->userRepository->delete($userId);
     }
 
-    public function findUserById(int $userId): ?User
+    public function findUserById(int $userId): User
     {
-        return $this->userRepository->findById($userId);
+        $user = $this->userRepository->findById($userId);
+
+        if ($user === null) {
+            throw new TaskWaveUserNotFoundException(
+                'User not exists with this ID',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
+        }
+
+        return $user;
     }
 
-    public function findUserByEmail(string $email): ?User
+    public function findUserByEmail(string $email): User
     {
-        return $this->userRepository->findByEmail(Email::from($email));
+        $user = $this->userRepository->findByEmail(Email::from($email));
+
+        if ($user === null) {
+            throw new TaskWaveUserNotFoundException(
+                'User not exists with this email',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
+        }
+
+        return $user;
     }
 
     public function updatePassword(Email $email, string $newPassword, string $resetToken): void
