@@ -55,7 +55,7 @@ class EditUserAction extends TaskWaveAction
             )->getResponse($response);
         }
 
-        $this->userService->updateUserFromRaw(
+        $this->userService->updateUser(
             $userId,
             $username,
             $email,
