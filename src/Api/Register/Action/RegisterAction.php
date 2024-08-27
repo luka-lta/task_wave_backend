@@ -49,7 +49,7 @@ class RegisterAction extends TaskWaveAction
         );
 
         return TaskWaveResult::from(
-            JsonResult::from('User registered!', ['token' => $token]),
+            JsonResult::from('User registered!', ['token' => $token->getToken()]),
             StatusCodeInterface::STATUS_CREATED
         )->getResponse($response);
     }

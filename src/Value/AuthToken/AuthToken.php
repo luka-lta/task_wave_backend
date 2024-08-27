@@ -2,32 +2,41 @@
 
 declare(strict_types=1);
 
-namespace TaskWaveBackend\Service;
+namespace TaskWaveBackend\Value\AuthToken;
 
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use TaskWaveBackend\Exception\TaskWaveInvalidTokenException;
 use TaskWaveBackend\Value\User\User;
 
-class JwtService
+class AuthToken
 {
-    public function generateJwt(User $user): string
+    public function __construct(
+        private readonly string $token,
+    )
+    {
+    }
+
+    public static function generateToken(User $user): AuthToken
     {
         $payload = [
             'iss' => 'taskwave',
-            'email' => $user->getEmail(),
-            'username' => $user->getUsername(),
+            'email' => $user->getEmail()->toString(),
+            'username' => $user->getUsername()->toString(),
             'sub' => $user->getUserId(),
             'iat' => time(),
             'exp' => time() + 3600,
         ];
 
-        return JWT::encode($payload, getenv('JWT_SECRET'), 'HS256');
+        $token = JWT::encode($payload, getenv('JWT_SECRET'), 'HS256');
+
+        return new self($token);
     }
 
-    public function decodeJwt(string $token): array
+    public static function decodeToken(string $token): DecodedToken
     {
         try {
             $decoded = JWT::decode($token, new Key(getenv('JWT_SECRET'), 'HS256'));
@@ -59,13 +68,18 @@ class JwtService
                     StatusCodeInterface::STATUS_UNAUTHORIZED
                 );
             }
-        } catch (Exception) {
+        } catch (BeforeValidException) {
             throw new TaskWaveInvalidTokenException(
                 'An error occurred on validate token',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
             );
         }
 
-        return (array) $decoded;
+        return DecodedToken::fromArray((array)$decoded);
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
     }
 }

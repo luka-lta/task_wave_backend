@@ -10,15 +10,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TaskWaveBackend\Exception\TaskWaveAuthException;
-use TaskWaveBackend\Service\JwtService;
+use TaskWaveBackend\Value\AuthToken\AuthToken;
 
 class AuthMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private readonly JwtService $jwtService,
-    )
-    {
-    }
+    ){}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -33,9 +30,9 @@ class AuthMiddleware implements MiddlewareInterface
 
         $token = $matches[1];
 
-        $decoded = $this->jwtService->decodeJwt($token);
+        $decoded = AuthToken::decodeToken($token);
 
-        $request = $request->withAttribute('jwt', $decoded);
+        $request = $request->withAttribute('jwt', $decoded->toArray());
 
         return $handler->handle($request);
     }

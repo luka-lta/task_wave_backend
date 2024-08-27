@@ -47,7 +47,7 @@ class LoginAction extends TaskWaveAction
             JsonResult::from(
                 'Login successfull',
                 [
-                    'token' => $token
+                    'token' => $token->getToken()
                 ]
             )
         )->getResponse($response);

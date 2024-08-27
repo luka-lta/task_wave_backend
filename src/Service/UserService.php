@@ -10,6 +10,7 @@ use TaskWaveBackend\Exception\TaskWaveInvalidCredentialsException;
 use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
 use TaskWaveBackend\Exception\TaskWaveValidationFailureException;
 use TaskWaveBackend\Repository\UserRepository;
+use TaskWaveBackend\Value\AuthToken\AuthToken;
 use TaskWaveBackend\Value\User\Email;
 use TaskWaveBackend\Value\User\Password;
 use TaskWaveBackend\Value\User\User;
@@ -18,7 +19,6 @@ class UserService
 {
     public function __construct(
         private readonly UserRepository       $userRepository,
-        private readonly JwtService           $jwtService,
         private readonly PasswordResetService $passwordResetService,
     ) {
     }
@@ -29,7 +29,7 @@ class UserService
         string $password,
         ?string $gender = null,
         ?string $profilePicture = null
-    ): string {
+    ): AuthToken {
         if ($this->userRepository->findByEmail(Email::from($email)) !== null) {
             throw new TaskWaveDatabaseException(
                 'Email already exists',
@@ -40,10 +40,10 @@ class UserService
         $user = User::fromRaw(null, $username, $email, $password, $gender, $profilePicture);
         $this->userRepository->save($user);
 
-        return $this->jwtService->generateJwt($user);
+        return AuthToken::generateToken($user);
     }
 
-    public function loginUser(string $email, string $inputPassword): string
+    public function loginUser(string $email, string $inputPassword): AuthToken
     {
         $user = $this->userRepository->findByEmail(Email::from($email));
 
@@ -61,7 +61,7 @@ class UserService
             );
         }
 
-        return $this->jwtService->generateJwt($user);
+        return AuthToken::generateToken($user);
     }
 
     public function updateUser(User $user): void
