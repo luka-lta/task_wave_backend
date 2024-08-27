@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TaskWaveBackend\Api\Validator\RequestValidator;
 use TaskWaveBackend\Service\UserService;
 use TaskWaveBackend\Slim\TaskWaveAction;
+use TaskWaveBackend\Value\AuthToken\DecodedToken;
 use TaskWaveBackend\Value\JsonResult;
 use TaskWaveBackend\Value\TaskWaveResult;
 
@@ -24,6 +25,14 @@ class DeleteUserAction extends TaskWaveAction
     protected function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $userId = (int)$request->getAttribute('userId') ?? null;
+        $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
+
+        if ($decodedToken->getUserId() !== $userId) {
+            return TaskWaveResult::from(
+                JsonResult::from('Unauthorized access.'),
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            )->getResponse($response);
+        }
 
         $validatorError = $this->requestValidator->validate([
             'userId' => $userId,

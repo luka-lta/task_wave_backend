@@ -16,6 +16,7 @@ use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
 use TaskWaveBackend\Api\User\Password\UpdatePasswordAction;
+use TaskWaveBackend\Slim\Middleware\AuthMiddleware;
 use TaskWaveBackend\Slim\Middleware\CORSMiddleware;
 use Throwable;
 
@@ -93,15 +94,18 @@ class RouteMiddlewareCollector
             $app->post('/login', LoginAction::class);
 
             $app->group('/user', function (RouteCollectorProxy $user) {
-                $user->post('/edit/{userId:[0-9]+}', EditUserAction::class);
-                $user->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class);
+                $user->post('/edit/{userId:[0-9]+}', EditUserAction::class)
+                    ->add(AuthMiddleware::class);
+                $user->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class)
+                    ->add(AuthMiddleware::class);
+
                 $user->post('/resetPassword/{email}', ResetPasswordAction::class);
                 $user->post('/updatePassword', UpdatePasswordAction::class);
             });
 
             $app->group('/category', function (RouteCollectorProxy $category) {
                 $category->post('/create/{ownerId:[0-9]+}', CreateCategoryAction::class);
-            });
+            })->add(AuthMiddleware::class);;
         });
     }
 }

@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TaskWaveBackend\Api\Validator\RequestValidator;
 use TaskWaveBackend\Service\CategoryService;
 use TaskWaveBackend\Slim\TaskWaveAction;
+use TaskWaveBackend\Value\AuthToken\DecodedToken;
 use TaskWaveBackend\Value\JsonResult;
 use TaskWaveBackend\Value\TaskWaveResult;
 
@@ -25,6 +26,14 @@ class CreateCategoryAction extends TaskWaveAction
     {
         $ownerId = (int)$request->getAttribute('ownerId') ?? null;
         $data = $request->getParsedBody();
+        $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
+
+        if ($decodedToken->getUserId() !== $ownerId) {
+            return TaskWaveResult::from(
+                JsonResult::from('Unauthorized access.'),
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            )->getResponse($response);
+        }
 
         $name = $data['name'] ?? null;
         $description = $data['description'] ?? null;
