@@ -25,6 +25,14 @@ class CreateCategoryAction extends TaskWaveAction
     {
         $ownerId = (int)$request->getAttribute('ownerId') ?? null;
         $data = $request->getParsedBody();
+        $jwt = $request->getAttribute('jwt');
+
+        if ($jwt['sub'] !== $ownerId) {
+            return TaskWaveResult::from(
+                JsonResult::from('Unauthorized access.'),
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            )->getResponse($response);
+        }
 
         $name = $data['name'] ?? null;
         $description = $data['description'] ?? null;

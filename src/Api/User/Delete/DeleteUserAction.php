@@ -24,6 +24,14 @@ class DeleteUserAction extends TaskWaveAction
     protected function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $userId = (int)$request->getAttribute('userId') ?? null;
+        $jwt = $request->getAttribute('jwt');
+
+        if ($jwt['sub'] !== $userId) {
+            return TaskWaveResult::from(
+                JsonResult::from('Unauthorized access.'),
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            )->getResponse($response);
+        }
 
         $validatorError = $this->requestValidator->validate([
             'userId' => $userId,

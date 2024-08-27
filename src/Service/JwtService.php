@@ -7,6 +7,7 @@ namespace TaskWaveBackend\Service;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use TaskWaveBackend\Exception\TaskWaveInvalidTokenException;
 use TaskWaveBackend\Value\User\User;
 
@@ -18,6 +19,7 @@ class JwtService
             'iss' => 'taskwave',
             'email' => $user->getEmail(),
             'username' => $user->getUsername(),
+            'sub' => $user->getUserId(),
             'iat' => time(),
             'exp' => time() + 3600,
         ];
@@ -25,17 +27,10 @@ class JwtService
         return JWT::encode($payload, getenv('JWT_SECRET'), 'HS256');
     }
 
-    public function decodeJwt(string $jwt): array
+    public function decodeJwt(string $token): array
     {
-        return (array) JWT::decode($jwt, getenv('JWT_SECRET'));
-    }
-
-    public function validateToken(string $token): bool
-    {
-        $secretKey = getenv('JWT_SECRET');
-
         try {
-            $decoded = JWT::decode($token, $secretKey);
+            $decoded = JWT::decode($token, new Key(getenv('JWT_SECRET'), 'HS256'));
 
             if ($decoded->exp < time()) {
                 throw new TaskWaveInvalidTokenException(
@@ -71,6 +66,6 @@ class JwtService
             );
         }
 
-        return true;
+        return (array) $decoded;
     }
 }

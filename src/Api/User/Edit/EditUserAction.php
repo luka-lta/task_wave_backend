@@ -31,6 +31,14 @@ class EditUserAction extends TaskWaveAction
         $password = $body['password'] ?? null;
         $gender = $body['gender'] ?? null;
         $profilePicture = $body['profilePicture'] ?? null;
+        $jwt = $request->getAttribute('jwt');
+
+        if ($jwt['sub'] !== $userId) {
+            return TaskWaveResult::from(
+                JsonResult::from('Unauthorized access.'),
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            )->getResponse($response);
+        }
 
         $validatorError = $this->requestValidator->validate([
             'userId' => $userId,
