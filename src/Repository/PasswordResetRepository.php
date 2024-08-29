@@ -15,8 +15,7 @@ class PasswordResetRepository
 {
     public function __construct(
         private readonly PDO $pdo,
-    )
-    {
+    ) {
     }
 
     public function createPasswordResetToken(Email $email, string $token): void
@@ -43,7 +42,6 @@ class PasswordResetRepository
                 'created_at_update' => date('Y-m-d H:i:s'),
                 'expired_at_update' => date('Y-m-d H:i:s', strtotime('+1 hour')),
             ]);
-
         } catch (PDOException $e) {
             var_dump($e->getMessage());
             throw new TaskWaveDatabaseException(
