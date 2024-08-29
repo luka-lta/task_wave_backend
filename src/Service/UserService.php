@@ -72,6 +72,13 @@ class UserService
         ?string $gender = null,
         ?string $profilePicture = null
     ): void {
+        if ($this->findUserByEmail($email) !== null) {
+            throw new TaskWaveDatabaseException(
+                'Email already exists',
+                StatusCodeInterface::STATUS_CONFLICT
+            );
+        }
+
         $user = User::fromRaw($userId, $username, $email, $password, $gender, $profilePicture);
 
         $this->userRepository->update($user);

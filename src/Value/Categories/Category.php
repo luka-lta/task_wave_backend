@@ -9,9 +9,9 @@ class Category
     private function __construct(
         private readonly ?int $categoryId,
         private readonly int $ownerId,
-        private readonly string $name,
-        private readonly string $description,
-        private readonly ?string $color,
+        private string $name,
+        private string $description,
+        private ?string $color,
     ) {
     }
 
@@ -62,8 +62,23 @@ class Category
         return $this->description;
     }
 
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function setColor(?string $color): void
+    {
+        $this->color = $color;
     }
 }

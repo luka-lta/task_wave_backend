@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use TaskWaveBackend\Api\Category\CreateCategoryAction;
+use TaskWaveBackend\Api\Category\EditCategoryAction;
 use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
@@ -105,7 +106,8 @@ class RouteMiddlewareCollector
 
             $app->group('/category', function (RouteCollectorProxy $category) {
                 $category->post('/create/{ownerId:[0-9]+}', CreateCategoryAction::class);
-            })->add(AuthMiddleware::class);;
+                $category->post('/edit/{categoryId:[0-9]+}', EditCategoryAction::class);
+            })->add(AuthMiddleware::class);
         });
     }
 }
