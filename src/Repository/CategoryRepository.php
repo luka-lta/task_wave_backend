@@ -78,6 +78,31 @@ class CategoryRepository
         }
     }
 
+    public function deleteCategory(int $categoryId): void
+    {
+        $query = <<<SQL
+            DELETE FROM 
+                categories
+            WHERE 
+                category_id = :category_id
+        SQL;
+
+        $this->pdo->beginTransaction();
+
+        try {
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['category_id' => $categoryId]);
+            $this->pdo->commit();
+        } catch (PDOException $exception) {
+            $this->pdo->rollBack();
+            throw new TaskWaveDatabaseException(
+                'Failed to delete categorie',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+    }
+
     public function findCategoryByName(string $name): ?Category
     {
         $query = <<<SQL
@@ -92,6 +117,36 @@ class CategoryRepository
         try {
             $stmt = $this->pdo->prepare($query);
             $stmt->execute(['name' => $name]);
+            $result = $stmt->fetch();
+
+            if ($result === false) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to find categorie',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return Category::fromDatabase($result);
+    }
+
+    public function findCategoryById(int $categoryId): ?Category
+    {
+        $query = <<<SQL
+            SELECT 
+                *
+            FROM 
+                categories
+            WHERE 
+                category_id = :categoryId
+        SQL;
+
+        try {
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['categoryId' => $categoryId]);
             $result = $stmt->fetch();
 
             if ($result === false) {
