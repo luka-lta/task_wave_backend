@@ -69,7 +69,6 @@ class CategoryRepository
             ]);
             $this->pdo->commit();
         } catch (PDOException $exception) {
-            var_dump($exception->getMessage());
             $this->pdo->rollBack();
             throw new TaskWaveDatabaseException(
                 'Failed to edit categorie',
