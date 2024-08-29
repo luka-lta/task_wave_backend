@@ -24,7 +24,8 @@
     "nyholm/psr7-server": "^1.1",
     "monolog/monolog": "^3.7",
     "ext-pdo": "*",
-    "firebase/php-jwt": "^6.10"
+    "firebase/php-jwt": "^6.10",
+    "ext-curl": "*"
   },
   "require-dev": {
     "phpmd/phpmd": "2.*",

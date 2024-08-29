@@ -1,0 +1,504 @@
+[
+  {
+    "username": "johndoe",
+    "password": "JohnDoe2023!",
+    "email": "johndoe@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "janesmith",
+    "password": "JaneSmith#2023",
+    "email": "janesmith@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "michaelbrown",
+    "password": "Michael!1234",
+    "email": "michaelbrown@example.com"
+  },
+  {
+    "username": "emilyjones",
+    "password": "EmilyJones!2023",
+    "email": "emilyjones@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "davidwilson",
+    "password": "DavidW2023#",
+    "email": "davidwilson@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "sarahl",
+    "password": "SarahL1234!",
+    "email": "sarahl@example.com"
+  },
+  {
+    "username": "robertmiller",
+    "password": "RobMiller2023!",
+    "email": "robertmiller@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "lisagarcia",
+    "password": "LisaG#2023",
+    "email": "lisagarcia@example.com"
+  },
+  {
+    "username": "jamesmartin",
+    "password": "JamesM!2023",
+    "email": "jamesmartin@example.com"
+  },
+  {
+    "username": "patriciahernandez",
+    "password": "Patricia2023!",
+    "email": "patriciahernandez@example.com"
+  },
+  {
+    "username": "williamlee",
+    "password": "WillL#2023",
+    "email": "williamlee@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "elizabethwalker",
+    "password": "Elizabeth!2023",
+    "email": "elizabethwalker@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "charlesking",
+    "password": "Charles2023#",
+    "email": "charlesking@example.com"
+  },
+  {
+    "username": "josephwong",
+    "password": "JosephW2023!",
+    "email": "josephwong@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "margaretramos",
+    "password": "MargeR2023#",
+    "email": "margaretramos@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "thomasharris",
+    "password": "TomH2023!",
+    "email": "thomasharris@example.com"
+  },
+  {
+    "username": "donaldyoung",
+    "password": "DonaldY#2023",
+    "email": "donaldyoung@example.com"
+  },
+  {
+    "username": "karenmartinez",
+    "password": "KarenM!2023",
+    "email": "karenmartinez@example.com"
+  },
+  {
+    "username": "stevenclark",
+    "password": "StevenC#2023",
+    "email": "stevenclark@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "laurabaker",
+    "password": "LauraB2023!",
+    "email": "laurabaker@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "brianadams",
+    "password": "BrianA2023#",
+    "email": "brianadams@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "heathermurphy",
+    "password": "HeatherM!2023",
+    "email": "heathermurphy@example.com"
+  },
+  {
+    "username": "kevinroberts",
+    "password": "KevinR2023#",
+    "email": "kevinroberts@example.com"
+  },
+  {
+    "username": "amandawhite",
+    "password": "AmandaW!2023",
+    "email": "amandawhite@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "ericscott",
+    "password": "EricS2023#",
+    "email": "ericscott@example.com"
+  },
+  {
+    "username": "melissajackson",
+    "password": "MelissaJ!2023",
+    "email": "melissajackson@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "georgehall",
+    "password": "GeorgeH2023#",
+    "email": "georgehall@example.com"
+  },
+  {
+    "username": "rebeccaphillips",
+    "password": "RebeccaP!2023",
+    "email": "rebeccaphillips@example.com"
+  },
+  {
+    "username": "frankyoung",
+    "password": "FrankY2023#",
+    "email": "frankyoung@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "kimberlyward",
+    "password": "KimW2023!",
+    "email": "kimberlyward@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "jasonlewis",
+    "password": "JasonL2023#",
+    "email": "jasonlewis@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "jennifergonzalez",
+    "password": "JenniferG!2023",
+    "email": "jennifergonzalez@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "stephentaylor",
+    "password": "StephenT2023#",
+    "email": "stephentaylor@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "nancyking",
+    "password": "NancyK!2023",
+    "email": "nancyking@example.com"
+  },
+  {
+    "username": "ronaldallen",
+    "password": "RonA2023#",
+    "email": "ronaldallen@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "ashleyhill",
+    "password": "AshleyH!2023",
+    "email": "ashleyhill@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "ryanmorris",
+    "password": "RyanM2023#",
+    "email": "ryanmorris@example.com"
+  },
+  {
+    "username": "brandonmorgan",
+    "password": "BrandonM!2023",
+    "email": "brandonmorgan@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "rachelgriffin",
+    "password": "RachelG2023#",
+    "email": "rachelgriffin@example.com"
+  },
+  {
+    "username": "nicholascooper",
+    "password": "NickC2023!",
+    "email": "nicholascooper@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "maryward",
+    "password": "MaryW#2023",
+    "email": "maryward@example.com"
+  },
+  {
+    "username": "christopherreed",
+    "password": "ChrisR2023!",
+    "email": "christopherreed@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "dorothycook",
+    "password": "DorothyC#2023",
+    "email": "dorothycook@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "joshuaallen",
+    "password": "JoshA2023!",
+    "email": "joshuaallen@example.com"
+  },
+  {
+    "username": "samanthabell",
+    "password": "SamanthaB#2023",
+    "email": "samanthabell@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "edwardadams",
+    "password": "EdwardA2023!",
+    "email": "edwardadams@example.com"
+  },
+  {
+    "username": "victoriagarcia",
+    "password": "VictoriaG#2023",
+    "email": "victoriagarcia@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "thomaswright",
+    "password": "TomW2023!",
+    "email": "thomaswright@example.com"
+  },
+  {
+    "username": "angelathompson",
+    "password": "AngelaT#2023",
+    "email": "angelathompson@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "christopherevans",
+    "password": "ChrisE2023!",
+    "email": "christopherevans@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "matthewking",
+    "password": "MattK#2023",
+    "email": "matthewking@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "daniellejohnson",
+    "password": "DanielleJ!2023",
+    "email": "daniellejohnson@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "donaldscott",
+    "password": "DonS2023#",
+    "email": "donaldscott@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "melissahill",
+    "password": "MelissaH!2023",
+    "email": "melissahill@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "andrewmartin",
+    "password": "AndrewM2023#",
+    "email": "andrewmartin@example.com"
+  },
+  {
+    "username": "kathrynbaker",
+    "password": "KathrynB!2023",
+    "email": "kathrynbaker@example.com"
+  },
+  {
+    "username": "scottharris",
+    "password": "ScottH#2023",
+    "email": "scottharris@example.com"
+  },
+  {
+    "username": "jacobyoung",
+    "password": "JacobY2023!",
+    "email": "jacobyoung@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "carolynramos",
+    "password": "CarolynR#2023",
+    "email": "carolynramos@example.com"
+  },
+  {
+    "username": "gregorymartinez",
+    "password": "GregM2023!",
+    "email": "gregorymartinez@example.com"
+  },
+  {
+    "username": "rebeccaclark",
+    "password": "RebeccaC#2023",
+    "email": "rebeccaclark@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "kennethlewis",
+    "password": "KenL2023!",
+    "email": "kennethlewis@example.com"
+  },
+  {
+    "username": "angelarobinson",
+    "password": "AngelaR#2023",
+    "email": "angelarobinson@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "richardmiller",
+    "password": "RichM2023!",
+    "email": "richardmiller@example.com"
+  },
+  {
+    "username": "michelleperez",
+    "password": "MichelleP#2023",
+    "email": "michelleperez@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "brianroberts",
+    "password": "BrianR2023!",
+    "email": "brianroberts@example.com"
+  },
+  {
+    "username": "cynthiamoore",
+    "password": "CynthiaM#2023",
+    "email": "cynthiamoore@example.com"
+  },
+  {
+    "username": "robertdavis",
+    "password": "RobD2023!",
+    "email": "robertdavis@example.com"
+  },
+  {
+    "username": "karenanderson",
+    "password": "KarenA#2023",
+    "email": "karenanderson@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "paulwhite",
+    "password": "PaulW2023!",
+    "email": "paulwhite@example.com"
+  },
+  {
+    "username": "donnarogers",
+    "password": "DonnaR#2023",
+    "email": "donnarogers@example.com"
+  },
+  {
+    "username": "timothyreed",
+    "password": "TimR2023!",
+    "email": "timothyreed@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "sandrawalker",
+    "password": "SandraW#2023",
+    "email": "sandrawalker@example.com"
+  },
+  {
+    "username": "christopherharris",
+    "password": "ChrisH2023!",
+    "email": "christopherharris@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "sharonallen",
+    "password": "SharonA#2023",
+    "email": "sharonallen@example.com"
+  },
+  {
+    "username": "danielthomas",
+    "password": "DanT2023!",
+    "email": "danielthomas@example.com"
+  },
+  {
+    "username": "jessicacook",
+    "password": "JessicaC#2023",
+    "email": "jessicacook@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "markrodriguez",
+    "password": "MarkR2023!",
+    "email": "markrodriguez@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "deborahcollins",
+    "password": "DeborahC#2023",
+    "email": "deborahcollins@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "stevenperez",
+    "password": "StevenP2023!",
+    "email": "stevenperez@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "theresahernandez",
+    "password": "TheresaH#2023",
+    "email": "theresahernandez@example.com"
+  },
+  {
+    "username": "anthonybrown",
+    "password": "AnthonyB2023!",
+    "email": "anthonybrown@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "lindawood",
+    "password": "LindaW#2023",
+    "email": "lindawood@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "garyclark",
+    "password": "GaryC2023!",
+    "email": "garyclark@example.com"
+  },
+  {
+    "username": "amylong",
+    "password": "AmyL#2023",
+    "email": "amylong@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "georgesanchez",
+    "password": "GeorgeS2023!",
+    "email": "georgesanchez@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "franklopez",
+    "password": "FrankL#2023",
+    "email": "franklopez@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "dianamorris",
+    "password": "DianaM2023!",
+    "email": "dianamorris@example.com",
+    "gender": "Female"
+  },
+  {
+    "username": "ronaldlee",
+    "password": "RonL#2023",
+    "email": "ronaldlee@example.com",
+    "gender": "Male"
+  },
+  {
+    "username": "amberwilliams",
+    "password": "AmberW2023!",
+    "email": "amberwilliams@example.com",
+    "gender": "Female"
+  }
+]
