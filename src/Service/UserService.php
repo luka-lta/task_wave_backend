@@ -72,6 +72,7 @@ class UserService
         ?string $gender = null,
         ?string $profilePicture = null
     ): void {
+        // TODO: Check if email is already in use
         $user = User::fromRaw($userId, $username, $email, $password, $gender, $profilePicture);
 
         $this->userRepository->update($user);
