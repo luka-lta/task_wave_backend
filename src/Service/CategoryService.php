@@ -54,6 +54,29 @@ class CategoryService
         $this->categorieRepository->editCategory($category);
     }
 
+    public function deleteCategory(int $ownerId, int $categoryId): void
+    {
+        $category = $this->findCategoryById($categoryId);
+
+        if ($category === null) {
+            throw new TaskWaveUserNotFoundException('Category not found');
+        }
+
+        if ($category->getOwnerId() !== $ownerId) {
+            throw new TaskWaveUserNotFoundException(
+                'Unauthorized access.',
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            );
+        }
+
+        $this->categorieRepository->deleteCategory($categoryId);
+    }
+
+    public function findCategoryById(int $categoryId): ?Category
+    {
+        return $this->categorieRepository->findCategoryById($categoryId);
+    }
+
     public function findCategoryByName(string $name): ?Category
     {
         return $this->categorieRepository->findCategoryByName($name);
