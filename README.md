@@ -1,7 +1,5 @@
 # TaskWave Backend
 
----
-
 This is the backend for the TaskWave project, a RESTful API designed to manage tasks efficiently. It allows users to create, read, update, and delete tasks, providing a solid foundation for task management applications. The API is built using PHP and MySQL.
 
 Frontend Project
@@ -9,15 +7,11 @@ For the frontend implementation of TaskWave, please visit the [TaskWave Frontend
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/luka-lta/task_wave_backend/blob/master/LICENSE)
 
----
-
 ## Index
 - [Installation](#-installation)
 - [Features](#features)
 - [Technologies](#-technologies)
 - [API Endpoints](#api-endpoints)
-
----
 
 ## ⚙️ Installation
 1. Clone the repository
@@ -34,8 +28,6 @@ composer install
 docker-compose up -d
 ```
 
----
-
 ## Features
 
 - User authentication
@@ -49,8 +41,6 @@ docker-compose up -d
 - Category update
 - Category deletion
 - Category retrieval
-
----
 
 ## 🖥️ Technologies
 
