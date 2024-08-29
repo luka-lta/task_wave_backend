@@ -46,6 +46,7 @@ class RegisterAction extends TaskWaveAction
             $username,
             $email,
             $password,
+            $body['gender'] ?? null,
         );
 
         return TaskWaveResult::from(
