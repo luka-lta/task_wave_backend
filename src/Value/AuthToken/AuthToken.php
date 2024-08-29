@@ -16,8 +16,7 @@ class AuthToken
 {
     public function __construct(
         private readonly string $token,
-    )
-    {
+    ) {
     }
 
     public static function generateToken(User $user): AuthToken
