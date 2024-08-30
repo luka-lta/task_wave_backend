@@ -34,7 +34,7 @@ class TaskRepository
                 'deadline' => $todoObject->getDeadline()->format(DATE_ATOM),
                 'priority' => $todoObject->getPriority(),
                 'status' => $todoObject->getStatus(),
-                'pinned' => $todoObject->isPinned(),
+                'pinned' => (int) $todoObject->isPinned(),
             ]);
         } catch (PDOException $exception) {
             throw new TaskWaveDatabaseException(

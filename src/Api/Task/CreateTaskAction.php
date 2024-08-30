@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TaskWaveBackend\Api\Task;
 
+use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,7 +53,7 @@ class CreateTaskAction extends TaskWaveAction
             $categoryId,
             $title,
             $description,
-            $deadline,
+            new DateTimeImmutable($deadline),
             $priority,
             $status,
             $pinned
