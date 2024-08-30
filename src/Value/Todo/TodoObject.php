@@ -9,15 +9,15 @@ use DateTimeImmutable;
 class TodoObject
 {
     private function __construct(
-        private readonly int                $todoId,
+        private readonly ?int                $todoId,
         private readonly int                $ownerId,
         private readonly ?int               $categoryId,
         private readonly string             $title,
-        private readonly string             $description,
-        private readonly DateTimeImmutable  $deadline,
-        private readonly string             $priority,
-        private readonly string             $status,
-        private readonly bool               $pinned,
+        private readonly ?string             $description,
+        private readonly ?DateTimeImmutable  $deadline,
+        private readonly ?string             $priority,
+        private readonly ?string             $status,
+        private readonly ?bool               $pinned,
         private readonly ?DateTimeImmutable $startedOn,
         private readonly ?DateTimeImmutable $finishedOn,
     ) {
@@ -28,12 +28,12 @@ class TodoObject
         return new self(
             $data['todo_id'],
             $data['owner_id'],
-            $data['category_id'],
+            $data['category_id'] ?? null,
             $data['title'],
-            $data['description'],
-            new DateTimeImmutable($data['deadline']),
-            $data['priority'],
-            $data['status'],
+            $data['description'] ?? null,
+            new DateTimeImmutable($data['deadline']) ?? null,
+            $data['priority'] ?? null,
+            $data['status'] ?? null,
             (bool)$data['pinned'],
             $data['started_on'] ? new DateTimeImmutable($data['started_on']) : null,
             $data['finished_on'] ? new DateTimeImmutable($data['finished_on']) : null,
@@ -41,20 +41,17 @@ class TodoObject
     }
 
     public static function create(
-        int                $todoId,
         int                $ownerId,
         ?int               $categoryId,
         string             $title,
-        string             $description,
-        DateTimeImmutable  $deadline,
-        string             $priority,
-        string             $status,
-        bool               $pinned,
-        ?DateTimeImmutable $startedOn,
-        ?DateTimeImmutable $finishedOn,
+        ?string             $description,
+        ?DateTimeImmutable  $deadline,
+        ?string             $priority,
+        ?string             $status,
+        ?bool               $pinned,
     ): self {
         return new self(
-            $todoId,
+            null,
             $ownerId,
             $categoryId,
             $title,
@@ -63,12 +60,12 @@ class TodoObject
             $priority,
             $status,
             $pinned,
-            $startedOn,
-            $finishedOn,
+            null,
+            null,
         );
     }
 
-    public function getTodoId(): int
+    public function getTodoId(): ?int
     {
         return $this->todoId;
     }
@@ -88,27 +85,27 @@ class TodoObject
         return $this->title;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function getDeadline(): DateTimeImmutable
+    public function getDeadline(): ?DateTimeImmutable
     {
         return $this->deadline;
     }
 
-    public function getPriority(): string
+    public function getPriority(): ?string
     {
         return $this->priority;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function isPinned(): bool
+    public function isPinned(): ?bool
     {
         return $this->pinned;
     }

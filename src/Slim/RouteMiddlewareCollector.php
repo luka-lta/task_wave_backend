@@ -14,6 +14,7 @@ use TaskWaveBackend\Api\Category\DeleteCategoryAction;
 use TaskWaveBackend\Api\Category\EditCategoryAction;
 use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
+use TaskWaveBackend\Api\Task\CreateTaskAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
@@ -104,6 +105,10 @@ class RouteMiddlewareCollector
                 $user->post('/resetPassword/{email}', ResetPasswordAction::class);
                 $user->post('/updatePassword', UpdatePasswordAction::class);
             });
+
+            $app->group('/task', function (RouteCollectorProxy $task) {
+                $task->post('/create', CreateTaskAction::class);
+            })->add(AuthMiddleware::class);
 
             $app->group('/category', function (RouteCollectorProxy $category) {
                 $category->post('/create/{ownerId:[0-9]+}', CreateCategoryAction::class);

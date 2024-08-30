@@ -162,4 +162,34 @@ class CategoryRepository
 
         return Category::fromDatabase($result);
     }
+
+    public function getCategoriesByOwnerId(int $ownerId): ?array
+    {
+        $query = <<<SQL
+            SELECT 
+                *
+            FROM 
+                categories
+            WHERE 
+                owner_id = :owner_id
+        SQL;
+
+        try {
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['owner_id' => $ownerId]);
+            $result = $stmt->fetchAll();
+
+            if ($result === false) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to get categories',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return array_map(fn($data) => Category::fromDatabase($data), $result);
+    }
 }

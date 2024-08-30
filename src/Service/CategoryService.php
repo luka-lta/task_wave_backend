@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TaskWaveBackend\Service;
 
 use Fig\Http\Message\StatusCodeInterface;
+use TaskWaveBackend\Exception\TaskWaveCategoryNotFoundException;
 use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
 use TaskWaveBackend\Repository\CategoryRepository;
 use TaskWaveBackend\Value\Categories\Category;
@@ -80,5 +81,19 @@ class CategoryService
     public function findCategoryByName(string $name): ?Category
     {
         return $this->categorieRepository->findCategoryByName($name);
+    }
+
+    public function getCategoriesByOwnerId(int $ownerId): array
+    {
+        $categories = $this->categorieRepository->getCategoriesByOwnerId($ownerId);
+
+        if ($categories === null) {
+            throw new TaskWaveCategoryNotFoundException(
+                'No categories found',
+                StatusCodeInterface::STATUS_NOT_FOUND
+            );
+        }
+
+        return $categories;
     }
 }
