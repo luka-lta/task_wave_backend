@@ -43,12 +43,14 @@ class CreateTaskAction extends TaskWaveAction
             )->getResponse($response);
         }
 
+        $deadline = isset($data['deadline']) ? new DateTimeImmutable($data['deadline']) : null;
+
         $this->taskService->createTask(
             $decodedToken->getUserId(),
             $data['categoryId'] ?? null,
             $title,
             $data['description'] ?? null,
-            $data['deadline'] ? new DateTimeImmutable($data['deadline']) : null,
+            $deadline,
             $data['priority'] ?? null,
             $data['status'] ?? null,
             $data['pinned'] ?? null

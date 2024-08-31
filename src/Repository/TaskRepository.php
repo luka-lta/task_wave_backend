@@ -20,12 +20,23 @@ class TaskRepository
     public function createTask(TodoObject $todoObject): void
     {
         $sql = <<<SQL
-            INSERT INTO todos (owner_id, category_id, title, description, deadline, priority, status, pinned)
-            VALUES (:ownerId, :categoryId, :title, :description, :deadline, :priority, :status, :pinned)
+            INSERT INTO
+                todos (owner_id, category_id, title, description, deadline, priority, status, pinned)
+            VALUES (
+                    :ownerId, 
+                    :categoryId,
+                    :title,
+                    :description,
+                    :deadline,
+                    COALESCE(:priority, priority),
+                    COALESCE(:status, status),
+                    COALESCE(:pinned, pinned)
+                    )
         SQL;
 
         try {
-            $params = [
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute([
                 'ownerId' => $todoObject->getOwnerId(),
                 'categoryId' => $todoObject->getCategoryId(),
                 'title' => $todoObject->getTitle(),
@@ -34,16 +45,7 @@ class TaskRepository
                 'priority' => $todoObject->getPriority(),
                 'status' => $todoObject->getStatus(),
                 'pinned' => (int) $todoObject->isPinned(),
-            ];
-
-            $params = array_filter($params, function ($value) {
-                return $value !== null;
-            });
-
-            var_dump($params);
-
-            $statement = $this->pdo->prepare($sql);
-            $statement->execute($params);
+            ]);
         } catch (PDOException $exception) {
             var_dump($exception->getMessage());
             throw new TaskWaveDatabaseException(
