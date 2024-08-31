@@ -29,12 +29,7 @@ class CreateTaskAction extends TaskWaveAction
         $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
 
         $title = $data['title'] ?? null;
-        $categoryId = (int)$data['categoryId'] ?? null;
-        $description = $data['description'] ?? null;
-        $deadline = $data['deadline'] ?? null;
-        $priority = $data['priority'] ?? null;
-        $status = $data['status'] ?? null;
-        $pinned = (bool)$data['pinned'] ?? null;
+
 
         $validationResult = $this->requestValidator->validate([
             'ownerId' => $decodedToken->getUserId(),
@@ -50,13 +45,13 @@ class CreateTaskAction extends TaskWaveAction
 
         $this->taskService->createTask(
             $decodedToken->getUserId(),
-            $categoryId,
+            $data['categoryId'] ?? null,
             $title,
-            $description,
-            new DateTimeImmutable($deadline),
-            $priority,
-            $status,
-            $pinned
+            $data['description'] ?? null,
+            $data['deadline'] ? new DateTimeImmutable($data['deadline']) : null,
+            $data['priority'] ?? null,
+            $data['status'] ?? null,
+            $data['pinned'] ?? null
         );
 
         return TaskWaveResult::from(JsonResult::from('Task created successfully.'))->getResponse($response);

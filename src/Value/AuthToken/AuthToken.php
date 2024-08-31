@@ -7,6 +7,7 @@ namespace TaskWaveBackend\Value\AuthToken;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Firebase\JWT\BeforeValidException;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use TaskWaveBackend\Exception\TaskWaveInvalidTokenException;
@@ -67,10 +68,11 @@ class AuthToken
                     StatusCodeInterface::STATUS_UNAUTHORIZED
                 );
             }
-        } catch (BeforeValidException) {
+        } catch (ExpiredException | BeforeValidException | Exception $e) {
             throw new TaskWaveInvalidTokenException(
                 'An error occurred on validate token',
-                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $e
             );
         }
 

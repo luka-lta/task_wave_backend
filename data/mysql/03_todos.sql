@@ -1,7 +1,7 @@
 CREATE TABLE `todos`
 (
     `todo_id`     int                                        NOT NULL,
-    `owner_id`    int                                        NOT NULL,
+    `owner_id`    int                                                 DEFAULT NULL,
     `category_id` int                                                 DEFAULT NULL,
     `title`       varchar(30)                                NOT NULL,
     `description` text,

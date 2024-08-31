@@ -36,8 +36,11 @@ class TaskService
             $categories[] = $category->getCategoryId();
         }
 
-        if (!in_array($categoryId, $categories, true)) {
-            throw new TaskWaveCategoryNotFoundException('Category not found');
+        if ($categoryId && !in_array($categoryId, $categories, true)) {
+            throw new TaskWaveCategoryNotFoundException(
+                'Category not found',
+                StatusCodeInterface::STATUS_NOT_FOUND
+            );
         }
 
         $task = TodoObject::create($ownerId, $categoryId, $title, $description, $deadline, $priority, $status, $pinned);
