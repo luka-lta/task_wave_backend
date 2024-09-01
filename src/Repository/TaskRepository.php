@@ -20,8 +20,18 @@ class TaskRepository
     public function createTask(TodoObject $todoObject): void
     {
         $sql = <<<SQL
-            INSERT INTO todos (owner_id, category_id, title, description, deadline, priority, status, pinned)
-            VALUES (:ownerId, :categoryId, :title, :description, :deadline, :priority, :status, :pinned)
+            INSERT INTO
+                todos (owner_id, category_id, title, description, deadline, priority, status, pinned)
+            VALUES (
+                    :ownerId, 
+                    :categoryId,
+                    :title,
+                    :description,
+                    :deadline,
+                    COALESCE(:priority, priority),
+                    COALESCE(:status, status),
+                    COALESCE(:pinned, pinned)
+                    )
         SQL;
 
         try {
@@ -31,12 +41,13 @@ class TaskRepository
                 'categoryId' => $todoObject->getCategoryId(),
                 'title' => $todoObject->getTitle(),
                 'description' => $todoObject->getDescription(),
-                'deadline' => $todoObject->getDeadline()->format(DATE_ATOM),
+                'deadline' => $todoObject->getDeadline()?->format(DATE_ATOM),
                 'priority' => $todoObject->getPriority(),
                 'status' => $todoObject->getStatus(),
-                'pinned' => $todoObject->isPinned(),
+                'pinned' => (int) $todoObject->isPinned(),
             ]);
         } catch (PDOException $exception) {
+            var_dump($exception->getMessage());
             throw new TaskWaveDatabaseException(
                 'Failed to create task',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,

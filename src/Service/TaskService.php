@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use TaskWaveBackend\Exception\TaskWaveCategoryNotFoundException;
 use TaskWaveBackend\Repository\TaskRepository;
+use TaskWaveBackend\Value\Categories\Category;
 use TaskWaveBackend\Value\Todo\TodoObject;
 
 class TaskService
@@ -30,7 +31,12 @@ class TaskService
     ): void {
         $categories = $this->categoryService->getCategoriesByOwnerId($ownerId);
 
-        if ($categoryId && !in_array($categoryId, $categories)) {
+        /** @var Category $category */
+        foreach ($categories as $category) {
+            $categories[] = $category->getCategoryId();
+        }
+
+        if ($categoryId && !in_array($categoryId, $categories, true)) {
             throw new TaskWaveCategoryNotFoundException(
                 'Category not found',
                 StatusCodeInterface::STATUS_NOT_FOUND

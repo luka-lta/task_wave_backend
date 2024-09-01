@@ -14,8 +14,8 @@ use TaskWaveBackend\Value\AuthToken\AuthToken;
 
 class AuthMiddleware implements MiddlewareInterface
 {
-    public function __construct(
-    ){}
+    public function __construct()
+    {}
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
