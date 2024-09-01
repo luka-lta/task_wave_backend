@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TaskWaveBackend\Service;
 
 use Fig\Http\Message\StatusCodeInterface;
+use TaskWaveBackend\Exception\TaskWaveAuthException;
 use TaskWaveBackend\Exception\TaskWaveCategoryNotFoundException;
 use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
 use TaskWaveBackend\Repository\CategoryRepository;
@@ -38,7 +39,7 @@ class CategoryService
         $category = $this->findCategoryByName($name);
 
         if ($category && $category->getOwnerId() !== $ownerId) {
-            throw new TaskWaveUserNotFoundException(
+            throw new TaskWaveAuthException(
                 'Unauthorized access.',
                 StatusCodeInterface::STATUS_UNAUTHORIZED
             );

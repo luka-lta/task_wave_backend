@@ -39,11 +39,11 @@ class TaskRepository
             $statement->execute([
                 'ownerId' => $todoObject->getOwnerId(),
                 'categoryId' => $todoObject->getCategoryId(),
-                'title' => $todoObject->getTitle(),
-                'description' => $todoObject->getDescription(),
-                'deadline' => $todoObject->getDeadline()?->format(DATE_ATOM),
-                'priority' => $todoObject->getPriority(),
-                'status' => $todoObject->getStatus(),
+                'title' => $todoObject->getTaskDetails()->getTitle(),
+                'description' => $todoObject->getTaskDetails()->getDescription(),
+                'deadline' => $todoObject->getTimeFrame()->getDeadline()?->format(DATE_ATOM),
+                'priority' => $todoObject->getTaskStatus()->getPriority(),
+                'status' => $todoObject->getTaskStatus()->getStatus(),
                 'pinned' => (int) $todoObject->isPinned(),
             ]);
         } catch (PDOException $exception) {
@@ -54,5 +54,80 @@ class TaskRepository
                 $exception
             );
         }
+    }
+
+    public function editTask(TodoObject $todoObject): void
+    {
+        $sql = <<<SQL
+            UPDATE
+                todos
+            SET
+                category_id = :categoryId,
+                title = :title,
+                description = :description,
+                deadline = :deadline,
+                priority = COALESCE(:priority, priority),
+                status = COALESCE(:status, status),
+                pinned = COALESCE(:pinned, pinned),
+                started_on = :startedOn,
+                finished_on = :finishedOn
+            WHERE
+                todo_id = :taskId
+        SQL;
+        $this->pdo->beginTransaction();
+
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute([
+                'categoryId' => $todoObject->getCategoryId(),
+                'title' => $todoObject->getTaskDetails()->getTitle(),
+                'description' => $todoObject->getTaskDetails()->getDescription(),
+                'deadline' => $todoObject->getTimeFrame()->getDeadline()?->format(DATE_ATOM),
+                'priority' => $todoObject->getTaskStatus()->getPriority(),
+                'status' => $todoObject->getTaskStatus()->getStatus(),
+                'pinned' => (int) $todoObject->isPinned(),
+                'startedOn' => $todoObject->getTimeFrame()->getStartedOn()?->format(DATE_ATOM),
+                'finishedOn' => $todoObject->getTimeFrame()->getFinishedOn()?->format(DATE_ATOM),
+                'taskId' => $todoObject->getTodoId(),
+            ]);
+            $this->pdo->commit();
+        } catch (PDOException $exception) {
+            $this->pdo->rollBack();
+            throw new TaskWaveDatabaseException(
+                'Failed to update task',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+    }
+
+    public function getTaskById(int $taskId): ?TodoObject
+    {
+        $query = <<<SQL
+            SELECT
+                *
+            FROM
+                todos
+            WHERE
+                todo_id = :taskId
+        SQL;
+
+        try {
+            $statement = $this->pdo->prepare($query);
+            $statement->execute(['taskId' => $taskId]);
+            $task = $statement->fetch();
+
+            if (!$task) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to fetch task',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return TodoObject::fromDatabase($task);
     }
 }
