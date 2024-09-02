@@ -42,6 +42,17 @@ class Category
         );
     }
 
+    public function toArray(): array
+    {
+        return [
+            'categoryId' => $this->categoryId,
+            'ownerId' => $this->ownerId,
+            'name' => $this->name,
+            'description' => $this->description,
+            'color' => $this->color,
+        ];
+    }
+
     public function getCategoryId(): ?int
     {
         return $this->categoryId;
