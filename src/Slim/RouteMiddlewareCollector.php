@@ -17,6 +17,7 @@ use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
 use TaskWaveBackend\Api\Task\CreateTaskAction;
 use TaskWaveBackend\Api\Task\EditTaskAction;
+use TaskWaveBackend\Api\Task\GetTasksAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
@@ -111,6 +112,7 @@ class RouteMiddlewareCollector
             $app->group('/task', function (RouteCollectorProxy $task) {
                 $task->post('/create', CreateTaskAction::class);
                 $task->post('/edit/{taskId:[0-9]+}', EditTaskAction::class);
+                $task->get('/all', GetTasksAction::class);
             })->add(AuthMiddleware::class);
 
             $app->group('/category', function (RouteCollectorProxy $category) {

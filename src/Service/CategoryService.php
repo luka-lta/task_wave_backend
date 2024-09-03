@@ -45,12 +45,6 @@ class CategoryService
             );
         }
 
-        if ($category && $category->getName() === $name) {
-            throw new TaskWaveUserNotFoundException(
-                'Category already exists',
-                StatusCodeInterface::STATUS_CONFLICT
-            );
-        }
         $category = Category::from($categoryId, $ownerId, $name, $description, $color);
 
         $this->categorieRepository->editCategory($category);

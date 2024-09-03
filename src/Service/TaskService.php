@@ -120,4 +120,18 @@ class TaskService
 
         return $task;
     }
+
+    public function getAllTasksByOwnerId(int $ownerId): array
+    {
+        $tasks = $this->taskRepository->getAllTasksByOwnerId($ownerId);
+
+        if ($tasks === null) {
+            throw new TaskWaveTaskNotFoundException(
+                'No tasks found',
+                StatusCodeInterface::STATUS_NOT_FOUND
+            );
+        }
+
+        return $tasks;
+    }
 }

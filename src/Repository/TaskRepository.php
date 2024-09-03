@@ -130,4 +130,34 @@ class TaskRepository
 
         return TodoObject::fromDatabase($task);
     }
+
+    public function getAllTasksByOwnerId(int $ownerId): ?array
+    {
+        $query = <<<SQL
+            SELECT
+                *
+            FROM
+                todos
+            WHERE
+                owner_id = :ownerId
+        SQL;
+
+        try {
+            $statement = $this->pdo->prepare($query);
+            $statement->execute(['ownerId' => $ownerId]);
+            $tasks = $statement->fetchAll();
+
+            if (!$tasks) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to fetch tasks',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return array_map(fn($task) => TodoObject::fromDatabase($task), $tasks);
+    }
 }

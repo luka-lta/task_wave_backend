@@ -49,6 +49,23 @@ class TodoObject
         );
     }
 
+    public function toArray(): array
+    {
+        return [
+            'todoId' => $this->todoId,
+            'ownerId' => $this->ownerId,
+            'categoryId' => $this->categoryId,
+            'title' => $this->taskDetails->getTitle(),
+            'description' => $this->taskDetails->getDescription(),
+            'deadline' => $this->timeFrame->getDeadline()?->format(DATE_ATOM),
+            'startedOn' => $this->timeFrame->getStartedOn()?->format(DATE_ATOM),
+            'finishedOn' => $this->timeFrame->getFinishedOn()?->format(DATE_ATOM),
+            'status' => $this->taskStatus->getStatus(),
+            'priority' => $this->taskStatus->getPriority(),
+            'pinned' => $this->pinned,
+        ];
+    }
+
     public function getTodoId(): ?int
     {
         return $this->todoId;
