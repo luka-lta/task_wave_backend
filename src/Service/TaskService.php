@@ -124,14 +124,34 @@ class TaskService
     public function getAllTasksByOwnerId(int $ownerId): array
     {
         $tasks = $this->taskRepository->getAllTasksByOwnerId($ownerId);
+        $categories = [];
 
-        if ($tasks === null) {
-            throw new TaskWaveTaskNotFoundException(
-                'No tasks found',
-                StatusCodeInterface::STATUS_NOT_FOUND
-            );
+        /** @var TodoObject $task */
+        foreach ($tasks as $task) {
+            $categoryId = $task->getCategoryId();
+
+            if ($categoryId !== null) {
+                $category = $this->categoryService->findCategoryById($categoryId);
+
+                if (is_object($category)) {
+                    $categories[$task->getTodoId()] = $category;
+                }
+            }
         }
 
-        return $tasks;
+        $formattedTasks = [];
+        foreach ($tasks as $task) {
+            $formattedTask = $task->toArray();
+
+            $formattedTask['category'] = isset(
+                $categories[$task->getTodoId()]
+            ) && is_object($categories[$task->getTodoId()])
+                ? $categories[$task->getTodoId()]->toArray()
+                : null;
+
+            $formattedTasks[] = $formattedTask;
+        }
+
+        return $formattedTasks;
     }
 }

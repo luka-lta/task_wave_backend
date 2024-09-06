@@ -26,18 +26,12 @@ class GetTasksAction extends TaskWaveAction
 
         try {
             $tasks = $this->taskService->getAllTasksByOwnerId($decodedToken->getUserId());
-
-            $allTasks = [];
-
-            foreach ($tasks as $task) {
-                $allTasks[] = $task->toArray();
-            }
         } catch (TaskWaveTaskNotFoundException $e) {
             return TaskWaveResult::from(JsonResult::from($e->getMessage(), $e->getCode()))->getResponse($response);
         }
 
         return TaskWaveResult::from(JsonResult::from('Tasks found', [
-            'tasks' => $allTasks,
+            'tasks' => $tasks,
         ]))->getResponse($response);
     }
 }
