@@ -12,9 +12,12 @@ use Slim\Routing\RouteCollectorProxy;
 use TaskWaveBackend\Api\Category\CreateCategoryAction;
 use TaskWaveBackend\Api\Category\DeleteCategoryAction;
 use TaskWaveBackend\Api\Category\EditCategoryAction;
+use TaskWaveBackend\Api\Category\GetCategories;
 use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
 use TaskWaveBackend\Api\Task\CreateTaskAction;
+use TaskWaveBackend\Api\Task\EditTaskAction;
+use TaskWaveBackend\Api\Task\GetTasksAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
@@ -108,12 +111,15 @@ class RouteMiddlewareCollector
 
             $app->group('/task', function (RouteCollectorProxy $task) {
                 $task->post('/create', CreateTaskAction::class);
+                $task->post('/edit/{taskId:[0-9]+}', EditTaskAction::class);
+                $task->get('/all', GetTasksAction::class);
             })->add(AuthMiddleware::class);
 
             $app->group('/category', function (RouteCollectorProxy $category) {
                 $category->post('/create/{ownerId:[0-9]+}', CreateCategoryAction::class);
                 $category->post('/edit/{categoryId:[0-9]+}', EditCategoryAction::class);
                 $category->delete('/delete/{categoryId:[0-9]+}', DeleteCategoryAction::class);
+                $category->get('/all', GetCategories::class);
             })->add(AuthMiddleware::class);
         });
     }

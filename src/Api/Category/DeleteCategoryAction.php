@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace TaskWaveBackend\Api\Category;
 
-use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TaskWaveBackend\Service\CategoryService;
 use TaskWaveBackend\Slim\TaskWaveAction;
+use TaskWaveBackend\Value\AuthToken\DecodedToken;
 use TaskWaveBackend\Value\JsonResult;
 use TaskWaveBackend\Value\TaskWaveResult;
 
@@ -22,7 +22,7 @@ class DeleteCategoryAction extends TaskWaveAction
     protected function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $categoryId = (int) $request->getAttribute('categoryId');
-        $decodedToken = $request->getAttribute('jwt');
+        $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
 
         $this->categoryService->deleteCategory($decodedToken->getUserId(), $categoryId);
 

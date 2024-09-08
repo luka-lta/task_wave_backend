@@ -4,22 +4,16 @@ declare(strict_types=1);
 
 namespace TaskWaveBackend\Value\Todo;
 
-use DateTimeImmutable;
-
 class TodoObject
 {
     private function __construct(
-        private readonly ?int                $todoId,
-        private readonly int                $ownerId,
-        private readonly ?int               $categoryId,
-        private readonly string             $title,
-        private readonly ?string             $description,
-        private readonly ?DateTimeImmutable  $deadline,
-        private readonly ?string             $priority,
-        private readonly ?string             $status,
-        private readonly ?bool               $pinned,
-        private readonly ?DateTimeImmutable $startedOn,
-        private readonly ?DateTimeImmutable $finishedOn,
+        private readonly ?int       $todoId,
+        private readonly int        $ownerId,
+        private ?int                $categoryId,
+        private TaskDetails         $taskDetails,
+        private TaskStatus $taskStatus,
+        private ?bool               $pinned,
+        private TaskTimeFrame       $timeFrame,
     ) {
     }
 
@@ -29,40 +23,47 @@ class TodoObject
             $data['todo_id'],
             $data['owner_id'],
             $data['category_id'] ?? null,
-            $data['title'],
-            $data['description'] ?? null,
-            new DateTimeImmutable($data['deadline']) ?? null,
-            $data['priority'] ?? null,
-            $data['status'] ?? null,
+            TaskDetails::fromDatabase($data),
+            TaskStatus::fromDatabase($data),
             (bool)$data['pinned'],
-            $data['started_on'] ? new DateTimeImmutable($data['started_on']) : null,
-            $data['finished_on'] ? new DateTimeImmutable($data['finished_on']) : null,
+            TaskTimeFrame::fromDatabase($data)
         );
     }
 
     public static function create(
         int                $ownerId,
         ?int               $categoryId,
-        string             $title,
-        ?string             $description,
-        ?DateTimeImmutable  $deadline,
-        ?string             $priority,
-        ?string             $status,
-        ?bool               $pinned,
+        TaskDetails        $taskDetails,
+        TaskStatus         $taskStatus,
+        ?bool              $pinned,
+        TaskTimeFrame      $timeFrame,
     ): self {
         return new self(
             null,
             $ownerId,
             $categoryId,
-            $title,
-            $description,
-            $deadline,
-            $priority,
-            $status,
+            $taskDetails,
+            $taskStatus,
             $pinned,
-            null,
-            null,
+            $timeFrame
         );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'todoId' => $this->todoId,
+            'ownerId' => $this->ownerId,
+            'categoryId' => $this->categoryId,
+            'title' => $this->taskDetails->getTitle(),
+            'description' => $this->taskDetails->getDescription(),
+            'deadline' => $this->timeFrame->getDeadline()?->format(DATE_ATOM),
+            'startedOn' => $this->timeFrame->getStartedOn()?->format(DATE_ATOM),
+            'finishedOn' => $this->timeFrame->getFinishedOn()?->format(DATE_ATOM),
+            'status' => $this->taskStatus->getStatus(),
+            'priority' => $this->taskStatus->getPriority(),
+            'pinned' => $this->pinned,
+        ];
     }
 
     public function getTodoId(): ?int
@@ -80,29 +81,14 @@ class TodoObject
         return $this->categoryId;
     }
 
-    public function getTitle(): string
+    public function getTaskDetails(): TaskDetails
     {
-        return $this->title;
+        return $this->taskDetails;
     }
 
-    public function getDescription(): ?string
+    public function getTaskStatus(): TaskStatus
     {
-        return $this->description;
-    }
-
-    public function getDeadline(): ?DateTimeImmutable
-    {
-        return $this->deadline;
-    }
-
-    public function getPriority(): ?string
-    {
-        return $this->priority;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
+        return $this->taskStatus;
     }
 
     public function isPinned(): ?bool
@@ -110,13 +96,33 @@ class TodoObject
         return $this->pinned;
     }
 
-    public function getStartedOn(): ?DateTimeImmutable
+    public function getTimeFrame(): TaskTimeFrame
     {
-        return $this->startedOn;
+        return $this->timeFrame;
     }
 
-    public function getFinishedOn(): ?DateTimeImmutable
+    public function setCategoryId(?int $categoryId): void
     {
-        return $this->finishedOn;
+        $this->categoryId = $categoryId;
+    }
+
+    public function setTaskDetails(TaskDetails $taskDetails): void
+    {
+        $this->taskDetails = $taskDetails;
+    }
+
+    public function setTaskStatus(TaskStatus $taskStatus): void
+    {
+        $this->taskStatus = $taskStatus;
+    }
+
+    public function setPinned(?bool $pinned): void
+    {
+        $this->pinned = $pinned;
+    }
+
+    public function setTimeFrame(TaskTimeFrame $timeFrame): void
+    {
+        $this->timeFrame = $timeFrame;
     }
 }
