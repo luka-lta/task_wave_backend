@@ -112,6 +112,7 @@ class RouteMiddlewareCollector
             $app->group('/task', function (RouteCollectorProxy $task) {
                 $task->post('/create', CreateTaskAction::class);
                 $task->post('/edit/{taskId:[0-9]+}', EditTaskAction::class);
+                $task->delete('/delete/{taskId:[0-9]+}', EditTaskAction::class);
                 $task->get('/all', GetTasksAction::class);
             })->add(AuthMiddleware::class);
 

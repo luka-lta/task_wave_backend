@@ -30,7 +30,6 @@ class CreateTaskAction extends TaskWaveAction
 
         $title = $data['title'] ?? null;
 
-
         $validationResult = $this->requestValidator->validate([
             'ownerId' => $decodedToken->getUserId(),
             'title' => $title,

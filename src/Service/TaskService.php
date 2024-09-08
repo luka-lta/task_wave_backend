@@ -107,6 +107,20 @@ class TaskService
         $this->taskRepository->editTask($task);
     }
 
+    public function deleteTask(int $taskId, int $ownerId): void
+    {
+        $task = $this->getTaskById($taskId);
+
+        if ($task->getOwnerId() !== $ownerId) {
+            throw new TaskWaveAuthException(
+                'Unauthorized access.',
+                StatusCodeInterface::STATUS_UNAUTHORIZED
+            );
+        }
+
+        $this->taskRepository->deleteTask($task);
+    }
+
     public function getTaskById(int $taskId): TodoObject
     {
         $task = $this->taskRepository->getTaskById($taskId);
