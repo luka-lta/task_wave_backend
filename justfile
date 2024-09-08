@@ -6,3 +6,6 @@ lint:
 
 dev:
     docker compose -f docker-compose.development.yml up
+
+stop:
+    docker compose -f docker-compose.development.yml down

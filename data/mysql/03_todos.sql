@@ -11,7 +11,7 @@ CREATE TABLE `todos`
     `pinned`      tinyint(1)                                 NOT NULL DEFAULT '0',
     `started_on`  datetime                                            DEFAULT NULL,
     `finished_on` datetime                                            DEFAULT NULL,
-    `usaged_time` datetime                                            DEFAULT NULL
+    `usaged_time` time                                            DEFAULT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
@@ -27,3 +27,5 @@ ALTER TABLE `todos`
 ALTER TABLE `todos`
     ADD CONSTRAINT `category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `user_id` FOREIGN KEY (`owner_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
