@@ -101,6 +101,30 @@ class TaskRepository
         }
     }
 
+    public function deleteTask(TodoObject $todoObject): void
+    {
+        $sql = <<<SQL
+            DELETE FROM
+                todos
+            WHERE
+                todo_id = :taskId
+        SQL;
+
+        $this->pdo->beginTransaction();
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute(['taskId' => $todoObject->getTodoId()]);
+            $this->pdo->commit();
+        } catch (PDOException $exception) {
+            $this->pdo->rollBack();
+            throw new TaskWaveDatabaseException(
+                'Failed to delete task',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+    }
+
     public function getTaskById(int $taskId): ?TodoObject
     {
         $query = <<<SQL
