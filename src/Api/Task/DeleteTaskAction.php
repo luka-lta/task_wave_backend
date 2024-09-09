@@ -22,7 +22,7 @@ class DeleteTaskAction extends TaskWaveAction
     protected function execute(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $taskId = (int) $request->getAttribute('taskId');
-        $ownerId = DecodedToken::fromArray($request->getAttribute('decodedToken'))->getUserId();
+        $ownerId = DecodedToken::fromArray($request->getAttribute('jwt'))->getUserId();
 
         $this->taskService->deleteTask($taskId, $ownerId);
 
