@@ -8,6 +8,7 @@ class User
 {
     private function __construct(
         private readonly ?int             $userId,
+        private Role            $role,
         private readonly Username        $username,
         private readonly Email           $email,
         private Password        $password,
@@ -26,6 +27,7 @@ class User
 
         return new self(
             $payload['user_id'],
+            Role::from($payload['role_id'], $payload['role_name']),
             Username::from($payload['username']),
             Email::from($payload['email']),
             Password::fromHash($payload['password']),
@@ -36,6 +38,8 @@ class User
 
     public static function fromRaw(
         ?int $userId,
+        int $roleId,
+        string $role,
         string  $username,
         string  $email,
         string  $password,
@@ -47,6 +51,7 @@ class User
 
         return new self(
             $userId,
+            Role::from($roleId, $role),
             Username::from($username),
             Email::from($email),
             Password::fromPlain($password),
@@ -58,6 +63,11 @@ class User
     public function getUserId(): ?int
     {
         return $this->userId;
+    }
+
+    public function getRole(): Role
+    {
+        return $this->role;
     }
 
     public function getUsername(): Username
@@ -88,5 +98,10 @@ class User
     public function setPassword(Password $password): void
     {
         $this->password = $password;
+    }
+
+    public function setRole(Role $role): void
+    {
+        $this->role = $role;
     }
 }

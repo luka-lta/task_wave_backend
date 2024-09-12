@@ -21,7 +21,11 @@ class UserRepository
     public function findById(int $userId): ?User
     {
         try {
-            $stmt = $this->pdo->prepare('SELECT * FROM users WHERE user_id = :user_id');
+            $stmt = $this->pdo->prepare('
+                SELECT users.*, roles.id AS role_id, roles.name AS role_name
+                FROM users
+                JOIN roles ON users.role_id = roles.id
+                WHERE users.user_id = :user_id');
             $stmt->execute(['user_id' => $userId]);
             $userData = $stmt->fetch();
         } catch (PDOException $exception) {
@@ -38,7 +42,11 @@ class UserRepository
     public function findByEmail(Email $email): ?User
     {
         try {
-            $stmt = $this->pdo->prepare('SELECT * FROM users WHERE email = :email');
+            $stmt = $this->pdo->prepare('
+                SELECT users.*, roles.id AS role_id, roles.name AS role_name
+                FROM users
+                JOIN roles ON users.role_id = roles.id
+                WHERE users.email = :email');
             $stmt->execute(['email' => $email->toString()]);
             $userData = $stmt->fetch();
         } catch (PDOException $exception) {
