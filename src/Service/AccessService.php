@@ -15,7 +15,7 @@ class AccessService
     ) {
     }
 
-    public function accessResource(string $action, int $userId, int $requesterId): bool
+    public function accessResource(string $action, int $userId, int $resourceId): bool
     {
         $role = $this->roleRepository->getRole($userId);
 
@@ -25,17 +25,17 @@ class AccessService
 
         switch ($action) {
             case 'read':
-                if ($role->canRead() || $this->isOwner($userId, $requesterId)) {
+                if ($role->canRead() || $this->isOwner($userId, $resourceId)) {
                     return true;
                 }
                 break;
             case 'write':
-                if ($role->canWrite() || $this->isOwner($userId, $requesterId)) {
+                if ($role->canWrite() || $this->isOwner($userId, $resourceId)) {
                     return true;
                 }
                 break;
             case 'delete':
-                if ($role->canDelete() || $this->isOwner($userId, $requesterId)) {
+                if ($role->canDelete() || $this->isOwner($userId, $resourceId)) {
                     return true;
                 }
                 break;

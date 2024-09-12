@@ -77,10 +77,7 @@ class UserService
         ?string $profilePicture = null
     ): void {
         if ($this->accessService->accessResource('write', $userId, $requesterId) === false) {
-            throw new TaskWaveValidationFailureException(
-                'Unauthorized access',
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            );
+            return;
         }
 
         if ($this->findUserByEmail($email) !== null) {
@@ -99,10 +96,7 @@ class UserService
     public function deleteUser(int $requesterId, int $userId): void
     {
         if ($this->accessService->accessResource('delete', $userId, $requesterId) === false) {
-            throw new TaskWaveValidationFailureException(
-                'Unauthorized access',
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            );
+            return;
         }
 
         if ($this->findUserById($userId) === null) {
