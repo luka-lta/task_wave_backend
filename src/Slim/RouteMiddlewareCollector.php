@@ -20,6 +20,7 @@ use TaskWaveBackend\Api\Task\CreateTaskAction;
 use TaskWaveBackend\Api\Task\DeleteTaskAction;
 use TaskWaveBackend\Api\Task\EditTaskAction;
 use TaskWaveBackend\Api\Task\GetTasksAction;
+use TaskWaveBackend\Api\User\All\GetAllUsersAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
@@ -108,6 +109,9 @@ class RouteMiddlewareCollector
                 $user->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class)
                     ->add(AuthMiddleware::class);
                 $user->post('/role/{userId:[0-9]+}/{roleId:[0-9]+}', ChangeUserRoleAction::class)
+                    ->add(AuthMiddleware::class);
+
+                $user->get('/all', GetAllUsersAction::class)
                     ->add(AuthMiddleware::class);
 
                 $user->post('/resetPassword/{email}', ResetPasswordAction::class);

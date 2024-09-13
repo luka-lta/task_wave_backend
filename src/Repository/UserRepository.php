@@ -8,6 +8,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use PDO;
 use PDOException;
 use TaskWaveBackend\Exception\TaskWaveDatabaseException;
+use TaskWaveBackend\Value\Pagination\Pagination;
 use TaskWaveBackend\Value\User\Email;
 use TaskWaveBackend\Value\User\User;
 
@@ -143,5 +144,34 @@ class UserRepository
                 $exception
             );
         }
+    }
+
+    public function getAll(Pagination $pagination): ?array
+    {
+        try {
+            $stmt = $this->pdo->prepare('
+                SELECT users.*, roles.id AS role_id, roles.name AS role_name
+                FROM users
+                JOIN roles ON users.role_id = roles.id
+                LIMIT :limit OFFSET :offset
+            ');
+            $stmt->execute([
+                'limit' => $pagination->getPageSize()->getPageSize(),
+                'offset' => $pagination->getOffset(),
+            ]);
+            $usersData = $stmt->fetchAll();
+
+            if (empty($usersData)) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to fetch all users',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return $usersData;
     }
 }

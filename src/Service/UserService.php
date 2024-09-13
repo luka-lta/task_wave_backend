@@ -11,6 +11,9 @@ use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
 use TaskWaveBackend\Exception\TaskWaveValidationFailureException;
 use TaskWaveBackend\Repository\UserRepository;
 use TaskWaveBackend\Value\AuthToken\AuthToken;
+use TaskWaveBackend\Value\Pagination\Page;
+use TaskWaveBackend\Value\Pagination\PageSize;
+use TaskWaveBackend\Value\Pagination\Pagination;
 use TaskWaveBackend\Value\User\Email;
 use TaskWaveBackend\Value\User\Password;
 use TaskWaveBackend\Value\User\User;
@@ -176,5 +179,14 @@ class UserService
         $role = $this->roleService->findById($roleId);
 
         $this->userRepository->updateRole($role->getRoleId(), $userId);
+    }
+
+    public function getAll(int $requeserId, int $page, int $pageSize): array
+    {
+        $this->accessService->accessResource('read', $requeserId);
+
+        $pagination = Pagination::from(Page::from($page), PageSize::from($pageSize));
+
+        return $this->userRepository->getAll($pagination);
     }
 }
