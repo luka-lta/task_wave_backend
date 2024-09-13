@@ -11,6 +11,9 @@ use TaskWaveBackend\Exception\TaskWaveUserNotFoundException;
 use TaskWaveBackend\Exception\TaskWaveValidationFailureException;
 use TaskWaveBackend\Repository\UserRepository;
 use TaskWaveBackend\Value\AuthToken\AuthToken;
+use TaskWaveBackend\Value\Pagination\Page;
+use TaskWaveBackend\Value\Pagination\PageSize;
+use TaskWaveBackend\Value\Pagination\Pagination;
 use TaskWaveBackend\Value\User\Email;
 use TaskWaveBackend\Value\User\Password;
 use TaskWaveBackend\Value\User\User;
@@ -41,27 +44,6 @@ class UserService
 
         $user = User::fromRaw(null, $username, $email, $password, $gender, $profilePicture);
         $this->userRepository->save($user);
-
-        return AuthToken::generateToken($user);
-    }
-
-    public function loginUser(string $email, string $inputPassword): AuthToken
-    {
-        $user = $this->userRepository->findByEmail(Email::from($email));
-
-        if ($user === null) {
-            throw new TaskWaveUserNotFoundException(
-                'User not exists with this email',
-                StatusCodeInterface::STATUS_BAD_REQUEST
-            );
-        }
-
-        if (!$user->getPassword()->verify($inputPassword)) {
-            throw new TaskWaveInvalidCredentialsException(
-                'Invalid password',
-                StatusCodeInterface::STATUS_BAD_REQUEST
-            );
-        }
 
         return AuthToken::generateToken($user);
     }
@@ -97,14 +79,34 @@ class UserService
             return;
         }
 
-        if ($this->findUserById($userId) === null) {
-            throw new TaskWaveUserNotFoundException(
-                'User not exists with this ID',
-                StatusCodeInterface::STATUS_BAD_REQUEST
-            );
+        $user = $this->findUserById($userId);
+
+        $user->setDisabled(true);
+        $this->userRepository->update($user);
+    }
+
+    public function banUser(int $requesterId, int $userId): void
+    {
+        if ($this->accessService->accessResource('write', $requesterId) === false) {
+            return;
         }
 
-        $this->userRepository->delete($userId);
+        $user = $this->findUserById($userId);
+
+        $user->setBanned(true);
+        $this->userRepository->update($user);
+    }
+
+    public function unBanUser(int $requesterId, int $userId): void
+    {
+        if ($this->accessService->accessResource('write', $requesterId) === false) {
+            return;
+        }
+
+        $user = $this->findUserById($userId);
+
+        $user->setBanned(false);
+        $this->userRepository->update($user);
     }
 
     public function findUserById(int $userId): User
@@ -176,5 +178,14 @@ class UserService
         $role = $this->roleService->findById($roleId);
 
         $this->userRepository->updateRole($role->getRoleId(), $userId);
+    }
+
+    public function getAll(int $requeserId, int $page, int $pageSize): Pagination
+    {
+        $this->accessService->accessResource('read', $requeserId);
+
+        $pagination = Pagination::from(Page::from($page), PageSize::from($pageSize));
+
+        return $this->userRepository->getAll($pagination);
     }
 }

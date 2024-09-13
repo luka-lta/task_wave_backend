@@ -8,6 +8,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use PDO;
 use PDOException;
 use TaskWaveBackend\Exception\TaskWaveDatabaseException;
+use TaskWaveBackend\Value\Pagination\Pagination;
 use TaskWaveBackend\Value\User\Email;
 use TaskWaveBackend\Value\User\User;
 
@@ -94,7 +95,9 @@ class UserRepository
                 email = :email, 
                 password = :password, 
                 gender = :gender, 
-                profile_picture_path = :profile_picture_path 
+                profile_picture_path = :profile_picture_path,
+                disabled = :disabled,
+                banned = :banned
             WHERE user_id = :user_id
         ');
 
@@ -105,6 +108,8 @@ class UserRepository
                 'password' => $user->getPassword()->toString(),
                 'gender' => $user->getGender()?->toString(),
                 'profile_picture_path' => $user->getProfilePicture()?->toString(),
+                'disabled' => (int)$user->isDisabled(),
+                'banned' => (int)$user->isBanned(),
             ]);
             $this->pdo->commit();
         } catch (PDOException $exception) {
@@ -143,5 +148,37 @@ class UserRepository
                 $exception
             );
         }
+    }
+
+    public function getAll(Pagination $pagination): Pagination
+    {
+        try {
+            $stmtCount = $this->pdo->prepare('SELECT COUNT(*) FROM users');
+            $stmtCount->execute();
+            $totalRecords = $stmtCount->fetchColumn();
+
+            $pagination->setTotalRecords($totalRecords);
+
+            $stmt = $this->pdo->prepare('
+                SELECT users.*, roles.id AS role_id, roles.name AS role_name
+                FROM users
+                JOIN roles ON users.role_id = roles.id
+                LIMIT :limit OFFSET :offset
+            ');
+            $stmt->execute([
+                'limit' => $pagination->getPageSize()->getPageSize(),
+                'offset' => $pagination->getOffset(),
+            ]);
+            $usersData = $stmt->fetchAll();
+            $pagination->setData($usersData);
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to fetch all users',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return $pagination;
     }
 }
