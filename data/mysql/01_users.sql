@@ -9,7 +9,8 @@ CREATE TABLE `users`
     `profile_picture_path` int                            DEFAULT NULL,
     `last_logged_in`       datetime                       DEFAULT NULL,
     `updated_on`           datetime                       DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    `disabled`             tinyint(1)   NOT NULL          DEFAULT '0'
+    `disabled`             tinyint(1)   NOT NULL          DEFAULT '0',
+    `banned`               tinyint(1)   NOT NULL          DEFAULT '0'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;

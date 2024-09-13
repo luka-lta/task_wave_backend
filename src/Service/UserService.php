@@ -100,14 +100,34 @@ class UserService
             return;
         }
 
-        if ($this->findUserById($userId) === null) {
-            throw new TaskWaveUserNotFoundException(
-                'User not exists with this ID',
-                StatusCodeInterface::STATUS_BAD_REQUEST
-            );
+        $user = $this->findUserById($userId);
+
+        $user->setDisabled(true);
+        $this->userRepository->update($user);
+    }
+
+    public function banUser(int $requesterId, int $userId): void
+    {
+        if ($this->accessService->accessResource('write', $requesterId) === false) {
+            return;
         }
 
-        $this->userRepository->delete($userId);
+        $user = $this->findUserById($userId);
+
+        $user->setBanned(true);
+        $this->userRepository->update($user);
+    }
+
+    public function unBanUser(int $requesterId, int $userId): void
+    {
+        if ($this->accessService->accessResource('write', $requesterId) === false) {
+            return;
+        }
+
+        $user = $this->findUserById($userId);
+
+        $user->setBanned(false);
+        $this->userRepository->update($user);
     }
 
     public function findUserById(int $userId): User

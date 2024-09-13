@@ -13,7 +13,9 @@ class User
         private readonly Email           $email,
         private Password        $password,
         private readonly ?Gender         $gender,
-        private readonly ?ProfilePicture $profilePicture
+        private readonly ?ProfilePicture $profilePicture,
+        private bool $disabled = false,
+        private bool $banned = false,
     ) {
     }
 
@@ -32,7 +34,9 @@ class User
             Email::from($payload['email']),
             Password::fromHash($payload['password']),
             $gender,
-            $profilePicture
+            $profilePicture,
+            boolval($payload['disabled']),
+            boolval($payload['banned']),
         );
     }
 
@@ -93,6 +97,15 @@ class User
         return $this->profilePicture;
     }
 
+    public function isBanned(): bool
+    {
+        return $this->banned;
+    }
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
+    }
+
     public function setPassword(Password $password): void
     {
         $this->password = $password;
@@ -101,5 +114,15 @@ class User
     public function setRole(Role $role): void
     {
         $this->role = $role;
+    }
+
+    public function setDisabled(bool $disabled): void
+    {
+        $this->disabled = $disabled;
+    }
+
+    public function setBanned(bool $banned): void
+    {
+        $this->banned = $banned;
     }
 }

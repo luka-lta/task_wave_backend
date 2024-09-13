@@ -95,7 +95,9 @@ class UserRepository
                 email = :email, 
                 password = :password, 
                 gender = :gender, 
-                profile_picture_path = :profile_picture_path 
+                profile_picture_path = :profile_picture_path,
+                disabled = :disabled,
+                banned = :banned
             WHERE user_id = :user_id
         ');
 
@@ -106,6 +108,8 @@ class UserRepository
                 'password' => $user->getPassword()->toString(),
                 'gender' => $user->getGender()?->toString(),
                 'profile_picture_path' => $user->getProfilePicture()?->toString(),
+                'disabled' => (int)$user->isDisabled(),
+                'banned' => (int)$user->isBanned(),
             ]);
             $this->pdo->commit();
         } catch (PDOException $exception) {

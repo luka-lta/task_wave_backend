@@ -22,6 +22,8 @@ use TaskWaveBackend\Api\Task\EditTaskAction;
 use TaskWaveBackend\Api\Task\GetTasksAction;
 use TaskWaveBackend\Api\User\All\GetAllUsersAction;
 use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
+use TaskWaveBackend\Api\User\Edit\Ban\BanUserAction;
+use TaskWaveBackend\Api\User\Edit\Ban\UnBanUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
 use TaskWaveBackend\Api\User\Password\UpdatePasswordAction;
@@ -105,6 +107,10 @@ class RouteMiddlewareCollector
 
             $app->group('/user', function (RouteCollectorProxy $user) {
                 $user->post('/edit/{userId:[0-9]+}', EditUserAction::class)
+                    ->add(AuthMiddleware::class);
+                $user->post('/ban/{userId:[0-9]+}', BanUserAction::class)
+                    ->add(AuthMiddleware::class);
+                $user->post('/unban/{userId:[0-9]+}', UnBanUserAction::class)
                     ->add(AuthMiddleware::class);
                 $user->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class)
                     ->add(AuthMiddleware::class);

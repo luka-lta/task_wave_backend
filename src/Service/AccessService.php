@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TaskWaveBackend\Service;
 
 use Fig\Http\Message\StatusCodeInterface;
+use TaskWaveBackend\Exception\TaskWaveAccessDeniedException;
 use TaskWaveBackend\Exception\TaskWaveAuthException;
 use TaskWaveBackend\Repository\RoleRepository;
 
@@ -91,7 +92,7 @@ class AccessService
 
     private function denyAccess(): void
     {
-        throw new TaskWaveAuthException(
+        throw new TaskWaveAccessDeniedException(
             'Unauthorized access.',
             StatusCodeInterface::STATUS_UNAUTHORIZED
         );
