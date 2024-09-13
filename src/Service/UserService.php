@@ -48,27 +48,6 @@ class UserService
         return AuthToken::generateToken($user);
     }
 
-    public function loginUser(string $email, string $inputPassword): AuthToken
-    {
-        $user = $this->userRepository->findByEmail(Email::from($email));
-
-        if ($user === null) {
-            throw new TaskWaveUserNotFoundException(
-                'User not exists with this email',
-                StatusCodeInterface::STATUS_BAD_REQUEST
-            );
-        }
-
-        if (!$user->getPassword()->verify($inputPassword)) {
-            throw new TaskWaveInvalidCredentialsException(
-                'Invalid password',
-                StatusCodeInterface::STATUS_BAD_REQUEST
-            );
-        }
-
-        return AuthToken::generateToken($user);
-    }
-
     public function updateUser(
         int $requesterId,
         int $userId,

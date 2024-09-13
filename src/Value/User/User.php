@@ -7,15 +7,15 @@ namespace TaskWaveBackend\Value\User;
 class User
 {
     private function __construct(
-        private readonly ?int             $userId,
-        private ?Role            $role,
+        private readonly ?int            $userId,
+        private ?Role                    $role,
         private readonly Username        $username,
         private readonly Email           $email,
-        private Password        $password,
+        private Password                 $password,
         private readonly ?Gender         $gender,
         private readonly ?ProfilePicture $profilePicture,
-        private bool $disabled = false,
-        private bool $banned = false,
+        private bool                     $disabled = false,
+        private bool                     $banned = false,
     ) {
     }
 
@@ -41,10 +41,10 @@ class User
     }
 
     public static function fromRaw(
-        ?int $userId,
-        string  $username,
-        string  $email,
-        string  $password,
+        ?int   $userId,
+        string $username,
+        string $email,
+        string $password,
         string $gender = null,
         string $profilePicture = null
     ): self {
@@ -101,6 +101,7 @@ class User
     {
         return $this->banned;
     }
+
     public function isDisabled(): bool
     {
         return $this->disabled;

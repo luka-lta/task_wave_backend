@@ -8,6 +8,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TaskWaveBackend\Api\Validator\RequestValidator;
+use TaskWaveBackend\Service\LoginService;
 use TaskWaveBackend\Service\UserService;
 use TaskWaveBackend\Slim\TaskWaveAction;
 use TaskWaveBackend\Value\JsonResult;
@@ -17,7 +18,7 @@ use TaskWaveBackend\Value\User\Email;
 class LoginAction extends TaskWaveAction
 {
     public function __construct(
-        private readonly UserService $userService,
+        private readonly LoginService     $loginService,
         private readonly RequestValidator $validator,
     ) {
     }
@@ -41,7 +42,7 @@ class LoginAction extends TaskWaveAction
             )->getResponse($response);
         }
 
-        $token = $this->userService->loginUser($email, $password);
+        $token = $this->loginService->loginUser($email, $password);
 
         return TaskWaveResult::from(
             JsonResult::from(
