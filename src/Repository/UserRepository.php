@@ -21,7 +21,11 @@ class UserRepository
     public function findById(int $userId): ?User
     {
         try {
-            $stmt = $this->pdo->prepare('SELECT * FROM users WHERE user_id = :user_id');
+            $stmt = $this->pdo->prepare('
+                SELECT users.*, roles.id AS role_id, roles.name AS role_name
+                FROM users
+                JOIN roles ON users.role_id = roles.id
+                WHERE users.user_id = :user_id');
             $stmt->execute(['user_id' => $userId]);
             $userData = $stmt->fetch();
         } catch (PDOException $exception) {
@@ -38,7 +42,11 @@ class UserRepository
     public function findByEmail(Email $email): ?User
     {
         try {
-            $stmt = $this->pdo->prepare('SELECT * FROM users WHERE email = :email');
+            $stmt = $this->pdo->prepare('
+                SELECT users.*, roles.id AS role_id, roles.name AS role_name
+                FROM users
+                JOIN roles ON users.role_id = roles.id
+                WHERE users.email = :email');
             $stmt->execute(['email' => $email->toString()]);
             $userData = $stmt->fetch();
         } catch (PDOException $exception) {
@@ -117,6 +125,20 @@ class UserRepository
         } catch (PDOException $exception) {
             throw new TaskWaveDatabaseException(
                 'Failed to delete user',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+    }
+
+    public function updateRole(int $roleId, int $userId): void
+    {
+        try {
+            $stmt = $this->pdo->prepare('UPDATE users SET role_id = :role_id WHERE user_id = :user_id');
+            $stmt->execute(['role_id' => $roleId, 'user_id' => $userId]);
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to update user role',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
                 $exception
             );

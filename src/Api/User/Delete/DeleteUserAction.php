@@ -27,13 +27,6 @@ class DeleteUserAction extends TaskWaveAction
         $userId = (int)$request->getAttribute('userId') ?? null;
         $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
 
-        if ($decodedToken->getUserId() !== $userId) {
-            return TaskWaveResult::from(
-                JsonResult::from('Unauthorized access.'),
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            )->getResponse($response);
-        }
-
         $validatorError = $this->requestValidator->validate([
             'userId' => $userId,
         ]);
@@ -45,7 +38,7 @@ class DeleteUserAction extends TaskWaveAction
             )->getResponse($response);
         }
 
-        $this->userService->deleteUser($userId);
+        $this->userService->deleteUser($decodedToken->getUserId(), $userId);
 
         return TaskWaveResult::from(
             JsonResult::from('User deleted successfully.'),

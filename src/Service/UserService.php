@@ -20,6 +20,8 @@ class UserService
     public function __construct(
         private readonly UserRepository       $userRepository,
         private readonly PasswordResetService $passwordResetService,
+        private readonly AccessService        $accessService,
+        private readonly RoleService          $roleService,
     ) {
     }
 
@@ -65,6 +67,7 @@ class UserService
     }
 
     public function updateUser(
+        int $requesterId,
         int $userId,
         string $username,
         string $email,
@@ -72,6 +75,10 @@ class UserService
         ?string $gender = null,
         ?string $profilePicture = null
     ): void {
+        if ($this->accessService->accessUserResource('write', $userId, $requesterId) === false) {
+            return;
+        }
+
         if ($this->findUserByEmail($email) !== null) {
             throw new TaskWaveDatabaseException(
                 'Email already exists',
@@ -84,8 +91,12 @@ class UserService
         $this->userRepository->update($user);
     }
 
-    public function deleteUser(int $userId): void
+    public function deleteUser(int $requesterId, int $userId): void
     {
+        if ($this->accessService->accessUserResource('delete', $userId, $requesterId) === false) {
+            return;
+        }
+
         if ($this->findUserById($userId) === null) {
             throw new TaskWaveUserNotFoundException(
                 'User not exists with this ID',
@@ -145,5 +156,25 @@ class UserService
         $this->userRepository->update($user);
 
         $this->passwordResetService->deletePasswordReset($email);
+    }
+
+    public function updateRole(int $roleId, int $userId, int $requesterId): void
+    {
+        $this->findUserById($userId);
+
+        if ($this->accessService->accessUserResource('write', $requesterId, $userId) === false) {
+            return;
+        }
+
+        if ($this->accessService->canChangeRole($requesterId, $roleId) === false) {
+            throw new TaskWaveInvalidCredentialsException(
+                'You cannot change the role of this user',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
+        }
+
+        $role = $this->roleService->findById($roleId);
+
+        $this->userRepository->updateRole($role->getRoleId(), $userId);
     }
 }

@@ -15,6 +15,7 @@ use TaskWaveBackend\Api\Category\EditCategoryAction;
 use TaskWaveBackend\Api\Category\GetCategories;
 use TaskWaveBackend\Api\Login\Action\LoginAction;
 use TaskWaveBackend\Api\Register\Action\RegisterAction;
+use TaskWaveBackend\Api\Role\GetAll\GetAllRolesAction;
 use TaskWaveBackend\Api\Task\CreateTaskAction;
 use TaskWaveBackend\Api\Task\DeleteTaskAction;
 use TaskWaveBackend\Api\Task\EditTaskAction;
@@ -23,6 +24,7 @@ use TaskWaveBackend\Api\User\Delete\DeleteUserAction;
 use TaskWaveBackend\Api\User\Edit\EditUserAction;
 use TaskWaveBackend\Api\User\Password\ResetPasswordAction;
 use TaskWaveBackend\Api\User\Password\UpdatePasswordAction;
+use TaskWaveBackend\Api\User\Role\ChangeUserRoleAction;
 use TaskWaveBackend\Slim\Middleware\AuthMiddleware;
 use TaskWaveBackend\Slim\Middleware\CORSMiddleware;
 use Throwable;
@@ -105,6 +107,8 @@ class RouteMiddlewareCollector
                     ->add(AuthMiddleware::class);
                 $user->delete('/delete/{userId:[0-9]+}', DeleteUserAction::class)
                     ->add(AuthMiddleware::class);
+                $user->post('/role/{userId:[0-9]+}/{roleId:[0-9]+}', ChangeUserRoleAction::class)
+                    ->add(AuthMiddleware::class);
 
                 $user->post('/resetPassword/{email}', ResetPasswordAction::class);
                 $user->post('/updatePassword', UpdatePasswordAction::class);
@@ -122,6 +126,10 @@ class RouteMiddlewareCollector
                 $category->post('/edit/{categoryId:[0-9]+}', EditCategoryAction::class);
                 $category->delete('/delete/{categoryId:[0-9]+}', DeleteCategoryAction::class);
                 $category->get('/all', GetCategories::class);
+            })->add(AuthMiddleware::class);
+
+            $app->group('/role', function (RouteCollectorProxy $role) {
+                $role->get('/all', GetAllRolesAction::class);
             })->add(AuthMiddleware::class);
         });
     }

@@ -28,13 +28,6 @@ class EditUserAction extends TaskWaveAction
         $body = $request->getParsedBody();
         $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
 
-        if ($decodedToken->getUserId() !== $userId) {
-            return TaskWaveResult::from(
-                JsonResult::from('Unauthorized access.'),
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            )->getResponse($response);
-        }
-
         $email =  $body['email'] ?? null;
         $username = $body['username'] ?? null;
         $password = $body['password'] ?? null;
@@ -56,6 +49,7 @@ class EditUserAction extends TaskWaveAction
         }
 
         $this->userService->updateUser(
+            $decodedToken->getUserId(),
             $userId,
             $username,
             $email,

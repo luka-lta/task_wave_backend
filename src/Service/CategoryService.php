@@ -15,6 +15,7 @@ class CategoryService
 {
     public function __construct(
         private readonly CategoryRepository $categorieRepository,
+        private readonly AccessService $accessService,
     ) {
     }
 
@@ -38,11 +39,8 @@ class CategoryService
     ): void {
         $category = $this->findCategoryByName($name);
 
-        if ($category && $category->getOwnerId() !== $ownerId) {
-            throw new TaskWaveAuthException(
-                'Unauthorized access.',
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            );
+        if ($this->accessService->accessUserResource('edit', $ownerId, $category->getOwnerId()) === false) {
+            return;
         }
 
         $category = Category::from($categoryId, $ownerId, $name, $description, $color);
@@ -58,11 +56,8 @@ class CategoryService
             throw new TaskWaveUserNotFoundException('Category not found');
         }
 
-        if ($category->getOwnerId() !== $ownerId) {
-            throw new TaskWaveUserNotFoundException(
-                'Unauthorized access.',
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            );
+        if ($this->accessService->accessUserResource('delete', $ownerId, $category->getOwnerId()) === false) {
+            return;
         }
 
         $this->categorieRepository->deleteCategory($categoryId);

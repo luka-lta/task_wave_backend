@@ -21,6 +21,7 @@ class TaskService
     public function __construct(
         private readonly TaskRepository  $taskRepository,
         private readonly CategoryService $categoryService,
+        private readonly AccessService   $accessService,
     ) {
     }
 
@@ -75,11 +76,8 @@ class TaskService
     ): void {
         $task = $this->getTaskById($taskId);
 
-        if ($task->getOwnerId() !== $ownerId) {
-            throw new TaskWaveAuthException(
-                'Unauthorized access.',
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            );
+        if ($this->accessService->accessUserResource('edit', $ownerId, $task->getOwnerId()) === false) {
+            return;
         }
 
         if ($categoryId) {
@@ -111,11 +109,8 @@ class TaskService
     {
         $task = $this->getTaskById($taskId);
 
-        if ($task->getOwnerId() !== $ownerId) {
-            throw new TaskWaveAuthException(
-                'Unauthorized access.',
-                StatusCodeInterface::STATUS_UNAUTHORIZED
-            );
+        if ($this->accessService->accessUserResource('delete', $ownerId, $task->getOwnerId()) === false) {
+            return;
         }
 
         $this->taskRepository->deleteTask($task);
@@ -138,6 +133,9 @@ class TaskService
     public function getAllTasksByOwnerId(int $ownerId): array
     {
         $tasks = $this->taskRepository->getAllTasksByOwnerId($ownerId);
+
+        // TODO: Add access
+
         $categories = [];
 
         /** @var TodoObject $task */
