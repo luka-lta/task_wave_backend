@@ -146,9 +146,15 @@ class UserRepository
         }
     }
 
-    public function getAll(Pagination $pagination): ?array
+    public function getAll(Pagination $pagination): Pagination
     {
         try {
+            $stmtCount = $this->pdo->prepare('SELECT COUNT(*) FROM users');
+            $stmtCount->execute();
+            $totalRecords = $stmtCount->fetchColumn();
+
+            $pagination->setTotalRecords($totalRecords);
+
             $stmt = $this->pdo->prepare('
                 SELECT users.*, roles.id AS role_id, roles.name AS role_name
                 FROM users
@@ -160,10 +166,7 @@ class UserRepository
                 'offset' => $pagination->getOffset(),
             ]);
             $usersData = $stmt->fetchAll();
-
-            if (empty($usersData)) {
-                return null;
-            }
+            $pagination->setData($usersData);
         } catch (PDOException $exception) {
             throw new TaskWaveDatabaseException(
                 'Failed to fetch all users',
@@ -172,6 +175,6 @@ class UserRepository
             );
         }
 
-        return $usersData;
+        return $pagination;
     }
 }

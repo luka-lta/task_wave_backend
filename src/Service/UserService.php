@@ -181,7 +181,7 @@ class UserService
         $this->userRepository->updateRole($role->getRoleId(), $userId);
     }
 
-    public function getAll(int $requeserId, int $page, int $pageSize): array
+    public function getAll(int $requeserId, int $page, int $pageSize): Pagination
     {
         $this->accessService->accessResource('read', $requeserId);
 
