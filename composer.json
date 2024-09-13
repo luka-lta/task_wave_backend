@@ -13,6 +13,12 @@
       "email": "luka.lta21@gmail.com"
     }
   ],
+  "repositories": [
+    {
+      "url": "https://github.com/luka-lta/audit-log.git",
+      "type": "git"
+    }
+  ],
   "minimum-stability": "stable",
   "require": {
     "php": "^8.3",
@@ -25,7 +31,8 @@
     "monolog/monolog": "^3.7",
     "ext-pdo": "*",
     "firebase/php-jwt": "^6.10",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "luka-lta/audit-log": "^1.0"
   },
   "require-dev": {
     "phpmd/phpmd": "2.*",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TaskWaveBackend\Service;
 
+use AuditLog\Service\AuditLogService;
 use Fig\Http\Message\StatusCodeInterface;
 use TaskWaveBackend\Exception\TaskWaveDatabaseException;
 use TaskWaveBackend\Exception\TaskWaveInvalidCredentialsException;
@@ -25,6 +26,7 @@ class UserService
         private readonly PasswordResetService $passwordResetService,
         private readonly AccessService        $accessService,
         private readonly RoleService          $roleService,
+        private readonly AuditLogService      $auditLogService,
     ) {
     }
 
@@ -57,20 +59,25 @@ class UserService
         ?string $gender = null,
         ?string $profilePicture = null
     ): void {
-        if ($this->accessService->accessUserResource('write', $userId, $requesterId) === false) {
+        if ($this->accessService->accessUserResource('write', $requesterId, $userId) === false) {
             return;
         }
 
-        if ($this->findUserByEmail($email) !== null) {
-            throw new TaskWaveDatabaseException(
-                'Email already exists',
-                StatusCodeInterface::STATUS_CONFLICT
-            );
-        }
+        $oldUser = $this->findUserByEmail($email);
 
         $user = User::fromRaw($userId, $username, $email, $password, $gender, $profilePicture);
-
         $this->userRepository->update($user);
+
+        // TODO:     "error": "Call to a member function getRoleId() on null",
+
+        $this->auditLogService->logAction(
+            'update',
+            $requesterId,
+            'user',
+            $userId,
+            json_encode($oldUser->toArray()),
+            json_encode($user->toArray())
+        );
     }
 
     public function deleteUser(int $requesterId, int $userId): void
@@ -95,6 +102,15 @@ class UserService
 
         $user->setBanned(true);
         $this->userRepository->update($user);
+
+        $this->auditLogService->logAction(
+            'ban',
+            $requesterId,
+            'user',
+            $userId,
+            'false',
+            'true'
+        );
     }
 
     public function unBanUser(int $requesterId, int $userId): void
@@ -107,6 +123,15 @@ class UserService
 
         $user->setBanned(false);
         $this->userRepository->update($user);
+
+        $this->auditLogService->logAction(
+            'unban',
+            $requesterId,
+            'user',
+            $userId,
+            'true',
+            'false'
+        );
     }
 
     public function findUserById(int $userId): User

@@ -62,6 +62,19 @@ class User
         );
     }
 
+    public function toArray(): array
+    {
+        return [
+            'userId' => $this->userId,
+            'roleId' => $this->role->getRoleId(),
+            'roleName' => $this->role->getRole(),
+            'username' => $this->username->toString(),
+            'email' => $this->email->toString(),
+            'gender' => $this->gender->toString(),
+            'profilePicture' => $this->profilePicture?->toString(),
+        ];
+    }
+
     public function getUserId(): ?int
     {
         return $this->userId;

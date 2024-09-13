@@ -37,6 +37,11 @@ class Role
         return $this->roleId;
     }
 
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === self::ADMIN;
