@@ -39,7 +39,7 @@ class CategoryService
     ): void {
         $category = $this->findCategoryByName($name);
 
-        if ($this->accessService->accessResource('edit', $ownerId, $category->getOwnerId()) === false) {
+        if ($this->accessService->accessUserResource('edit', $ownerId, $category->getOwnerId()) === false) {
             return;
         }
 
@@ -56,7 +56,7 @@ class CategoryService
             throw new TaskWaveUserNotFoundException('Category not found');
         }
 
-        if ($this->accessService->accessResource('delete', $ownerId, $category->getOwnerId()) === false) {
+        if ($this->accessService->accessUserResource('delete', $ownerId, $category->getOwnerId()) === false) {
             return;
         }
 

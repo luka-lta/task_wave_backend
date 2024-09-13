@@ -8,7 +8,7 @@ class User
 {
     private function __construct(
         private readonly ?int             $userId,
-        private Role            $role,
+        private ?Role            $role,
         private readonly Username        $username,
         private readonly Email           $email,
         private Password        $password,
@@ -38,8 +38,6 @@ class User
 
     public static function fromRaw(
         ?int $userId,
-        int $roleId,
-        string $role,
         string  $username,
         string  $email,
         string  $password,
@@ -51,7 +49,7 @@ class User
 
         return new self(
             $userId,
-            Role::from($roleId, $role),
+            null,
             Username::from($username),
             Email::from($email),
             Password::fromPlain($password),

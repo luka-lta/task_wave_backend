@@ -28,7 +28,6 @@ class EditUserAction extends TaskWaveAction
         $body = $request->getParsedBody();
         $decodedToken = DecodedToken::fromArray($request->getAttribute('jwt'));
 
-        $roleId = (int)$body['roleId'] ?? null;
         $email =  $body['email'] ?? null;
         $username = $body['username'] ?? null;
         $password = $body['password'] ?? null;
@@ -37,7 +36,6 @@ class EditUserAction extends TaskWaveAction
 
         $validatorError = $this->requestValidator->validate([
             'userId' => $userId,
-            'roleId' => $roleId,
             'email' => $email,
             'username' => $username,
             'password' => $password,
@@ -53,7 +51,6 @@ class EditUserAction extends TaskWaveAction
         $this->userService->updateUser(
             $decodedToken->getUserId(),
             $userId,
-            $roleId,
             $username,
             $email,
             $password,

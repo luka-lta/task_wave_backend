@@ -76,7 +76,7 @@ class TaskService
     ): void {
         $task = $this->getTaskById($taskId);
 
-        if ($this->accessService->accessResource('edit', $ownerId, $task->getOwnerId()) === false) {
+        if ($this->accessService->accessUserResource('edit', $ownerId, $task->getOwnerId()) === false) {
             return;
         }
 
@@ -109,7 +109,7 @@ class TaskService
     {
         $task = $this->getTaskById($taskId);
 
-        if ($this->accessService->accessResource('delete', $ownerId, $task->getOwnerId()) === false) {
+        if ($this->accessService->accessUserResource('delete', $ownerId, $task->getOwnerId()) === false) {
             return;
         }
 

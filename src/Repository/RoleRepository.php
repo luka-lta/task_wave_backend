@@ -17,7 +17,31 @@ class RoleRepository
     ) {
     }
 
-    public function getRole(int $userId): Role
+    public function getAvailableRoles(): ?array
+    {
+        $sql = <<<SQL
+                SELECT roles.name, roles.id FROM roles
+        SQL;
+
+        try {
+            $stmt = $this->pdo->query($sql);
+            $roles = $stmt->fetchAll();
+
+            if ($roles === false) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to get available roles',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return $roles;
+    }
+
+    public function getRole(int $userId): ?Role
     {
         $sql = <<<SQL
                 SELECT roles.name, roles.id FROM users
@@ -29,9 +53,39 @@ class RoleRepository
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute(['id' => $userId]);
             $role = $stmt->fetch();
+
+            if ($role === false) {
+                return null;
+            }
         } catch (PDOException $exception) {
             throw new TaskWaveDatabaseException(
                 'Failed to get role',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+
+        return Role::from($role['id'], $role['name']);
+    }
+
+    public function findById(int $roleId): ?Role
+    {
+        $sql = <<<SQL
+                SELECT roles.name, roles.id FROM roles
+                WHERE roles.id = :id
+        SQL;
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(['id' => $roleId]);
+            $role = $stmt->fetch();
+
+            if ($role === false) {
+                return null;
+            }
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to find role',
                 StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
                 $exception
             );

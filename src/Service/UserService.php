@@ -21,6 +21,7 @@ class UserService
         private readonly UserRepository       $userRepository,
         private readonly PasswordResetService $passwordResetService,
         private readonly AccessService        $accessService,
+        private readonly RoleService          $roleService,
     ) {
     }
 
@@ -38,7 +39,7 @@ class UserService
             );
         }
 
-        $user = User::fromRaw(null, 4, 'User', $username, $email, $password, $gender, $profilePicture);
+        $user = User::fromRaw(null, $username, $email, $password, $gender, $profilePicture);
         $this->userRepository->save($user);
 
         return AuthToken::generateToken($user);
@@ -68,15 +69,13 @@ class UserService
     public function updateUser(
         int $requesterId,
         int $userId,
-        int $roleId,
-        string $role,
         string $username,
         string $email,
         string $password,
         ?string $gender = null,
         ?string $profilePicture = null
     ): void {
-        if ($this->accessService->accessResource('write', $userId, $requesterId) === false) {
+        if ($this->accessService->accessUserResource('write', $userId, $requesterId) === false) {
             return;
         }
 
@@ -87,15 +86,14 @@ class UserService
             );
         }
 
-
-        $user = User::fromRaw($userId, $roleId, $role, $username, $email, $password, $gender, $profilePicture);
+        $user = User::fromRaw($userId, $username, $email, $password, $gender, $profilePicture);
 
         $this->userRepository->update($user);
     }
 
     public function deleteUser(int $requesterId, int $userId): void
     {
-        if ($this->accessService->accessResource('delete', $userId, $requesterId) === false) {
+        if ($this->accessService->accessUserResource('delete', $userId, $requesterId) === false) {
             return;
         }
 
@@ -158,5 +156,25 @@ class UserService
         $this->userRepository->update($user);
 
         $this->passwordResetService->deletePasswordReset($email);
+    }
+
+    public function updateRole(int $roleId, int $userId, int $requesterId): void
+    {
+        $this->findUserById($userId);
+
+        if ($this->accessService->accessUserResource('write', $requesterId, $userId) === false) {
+            return;
+        }
+
+        if ($this->accessService->canChangeRole($requesterId, $roleId) === false) {
+            throw new TaskWaveInvalidCredentialsException(
+                'You cannot change the role of this user',
+                StatusCodeInterface::STATUS_BAD_REQUEST
+            );
+        }
+
+        $role = $this->roleService->findById($roleId);
+
+        $this->userRepository->updateRole($role->getRoleId(), $userId);
     }
 }

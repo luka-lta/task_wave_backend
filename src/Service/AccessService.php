@@ -15,7 +15,7 @@ class AccessService
     ) {
     }
 
-    public function accessResource(string $action, int $userId, int $resourceId): bool
+    public function accessUserResource(string $action, int $userId, int $resourceId): bool
     {
         $role = $this->roleRepository->getRole($userId);
 
@@ -44,6 +44,44 @@ class AccessService
         }
 
         $this->denyAccess();
+    }
+
+    public function accessResource(string $action, int $userId): bool
+    {
+        $role = $this->roleRepository->getRole($userId);
+
+        if (!$this->roleRepository->hasPermission($role->getRoleId(), $action)) {
+            $this->denyAccess();
+        }
+
+        switch ($action) {
+            case 'read':
+                if ($role->canRead()) {
+                    return true;
+                }
+                break;
+            case 'write':
+                if ($role->canWrite()) {
+                    return true;
+                }
+                break;
+            case 'delete':
+                if ($role->canDelete()) {
+                    return true;
+                }
+                break;
+            default:
+                $this->denyAccess();
+        }
+
+        $this->denyAccess();
+    }
+
+    public function canChangeRole(int $userId, int $requestedRole): bool
+    {
+        $role = $this->roleRepository->getRole($userId);
+
+        return $role->getRoleId() <= $requestedRole;
     }
 
     private function isOwner(int $userId, int $requesterId): bool

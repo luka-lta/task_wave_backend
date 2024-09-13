@@ -130,4 +130,18 @@ class UserRepository
             );
         }
     }
+
+    public function updateRole(int $roleId, int $userId): void
+    {
+        try {
+            $stmt = $this->pdo->prepare('UPDATE users SET role_id = :role_id WHERE user_id = :user_id');
+            $stmt->execute(['role_id' => $roleId, 'user_id' => $userId]);
+        } catch (PDOException $exception) {
+            throw new TaskWaveDatabaseException(
+                'Failed to update user role',
+                StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR,
+                $exception
+            );
+        }
+    }
 }
